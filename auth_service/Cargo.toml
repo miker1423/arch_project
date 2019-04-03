@@ -1,0 +1,10 @@
+[package]
+name = "auth_service"
+version = "0.1.0"
+authors = ["Miguel Pérez García <miguelpg_95@hotmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "0.7"
+time = "0.1.42"
+timer = "0.2.0"
