@@ -1,8 +1,8 @@
 
-#[derive(Eq, PartialEq, Hash)]
+#[derive(Eq, PartialEq, Hash, Debug)]
 pub struct User {
-    username: String,
-    email: String
+    pub username: String,
+    pub email: String
 }
 
 impl User {
@@ -26,6 +26,6 @@ impl From<&str> for User {
 
 impl From<&User> for String {
     fn from(user: &User) -> String {
-        format!("{},{}", user.username, user.email)
+        format!("{},{}\n", user.username, user.email)
     }
 }
