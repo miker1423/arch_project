@@ -1,24 +1,22 @@
 mod user;
 mod state;
+mod db_worker;
 
 use crate::user::User;
 use crate::state::AppState;
-use actix_web::{server, App, HttpRequest, Responder, HttpResponse, HttpMessage};
-use actix_web::AsyncResponder;
+use actix_web::{server, App, HttpRequest, Responder, Json, HttpResponse, HttpMessage, Error};
 use std::sync::Arc;
-use timer::Timer;
-use time::Duration;
-use std::fs::File;
-use std::io::Write;
-use std::fs::OpenOptions;
-use bytes::Bytes;
 use futures::future::Future;
+use actix_web::FromRequest;
+use actix_web::http::Method;
+use actix_web::AsyncResponder;
+use uuid::Uuid;
 
-fn greet(req: &HttpRequest<Arc<AppState>>) -> impl Responder {
-    req.json()
-        .from_err()
-        .and_then(|a: User| {
-            println!("{:?}", a);
+fn greet(req: &HttpRequest<Arc<AppState>>) -> Box<Future<Item=HttpResponse, Error=Error>> {
+    req.json().from_err()
+        .and_then(|value: User| {
+            let user = value.add_id();
+            Ok(HttpResponse::Ok().json(user))
         })
         .responder()
 }
@@ -36,7 +34,7 @@ fn find_user(req: &HttpRequest<Arc<AppState>>) -> impl Responder {
 fn register_user(req: &HttpRequest<Arc<AppState>>) -> impl Responder {
     let username = String::from(req.match_info().get("username").unwrap_or(""));
     let email = String::from(req.match_info().get("email").unwrap_or(""));
-    let user = User { username, email };
+    let user = User::build(username, email, Uuid::new_v4().to_string());
     let state: &AppState = req.state();
 
     state.add_user(user);
@@ -48,36 +46,12 @@ fn main() {
 
     println!("{}", address);
     let state = Arc::new(AppState::load_from_file("./users.db"));
-    let timer = Timer::new();
 
-    let _guard = {
-        let cloned_state = state.clone();
-        timer.schedule_repeating(Duration::seconds(5), move || {
-            let is_modified = cloned_state.is_modified();
-            if !is_modified { return; }
-
-            let result = OpenOptions::new().write(true).open(cloned_state.file_path.clone());
-            if let Ok(mut file) = result {
-                println!("Writting file");
-                for user in cloned_state.users.read().unwrap().values() {
-                    let serialized: String = String::from(user);
-                    let result = file.write(serialized.as_bytes());
-                    if let Err(e) = result {
-                        println!("{}", e);
-                    }
-                }
-                let result = file.flush();
-                if let Err(e) = result {
-                    println!("{}", e);
-                }
-            }
-            cloned_state.finish_write();
-        })
-    };
+    let _guard = db_worker::start_new(state.clone());
 
     server::new(move || {
         App::with_state(state.clone())
-            .resource("/", |r| r.f(greet))
+            .resource("/", |r| r.method(Method::POST).f(greet))
             .resource("/{name}", |r| r.f(greet))
             .resource("/add/{username}/{email}", |r| r.f(register_user))
             .resource("/find/{email}", |r| r.f(find_user))

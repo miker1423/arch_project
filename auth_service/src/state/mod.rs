@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-
 use crate::user::User;
 use std::sync::RwLock;
 use std::fs::File;
@@ -12,14 +11,6 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub fn new() -> AppState {
-        AppState {
-            modified: RwLock::new(false),
-            file_path: String::new(),
-            users: RwLock::new(HashMap::new())
-        }
-    }
-
     pub fn load_from_file(path: &str) -> AppState {
         let file = File::open(path);
         if let Err(_) = file {
