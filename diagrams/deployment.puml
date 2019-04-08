@@ -22,7 +22,6 @@ auth <--> registry
 habits <--> registry
 task <--> registry
 reporting <--> registry
-broker <--> registry
 
 broker -[#OrangeRed]-> reporting
 broker <-[#OrangeRed]- auth
