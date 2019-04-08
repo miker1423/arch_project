@@ -1,0 +1,32 @@
+@startuml Deployment Diagram
+
+component "Client" as client
+node "Inner services" {
+    component "Auth Service" as auth
+    component "Tasks Services" as task
+    component "Habits service" as habits
+    component "Reporting service" as reporting
+    component "Service Registry" as registry
+    component "Message Broker" as broker
+    component "Gateway" as gateway
+}
+
+client <-up-> gateway
+registry <-[#green]-> gateway
+task <-[#green]-> gateway
+auth <-[#green]-> gateway
+reporting <-[#green]-> gateway
+habits <-[#green]-> gateway
+
+auth <--> registry
+habits <--> registry
+task <--> registry
+reporting <--> registry
+broker <--> registry
+
+broker -[#OrangeRed]-> reporting
+broker <-[#OrangeRed]- auth
+broker <-[#OrangeRed]- task
+broker <-[#OrangeRed]- habits
+
+@enduml
