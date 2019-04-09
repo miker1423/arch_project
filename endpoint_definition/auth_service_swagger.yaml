@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Auth Service (Arch Project)
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/miker1423/Auth_Service/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /health:
+    get:
+      summary: Returns the status of the service
+      responses:
+        200:
+          description: The status of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+  /accounts:
+    post:
+      summary: Creates a new user, if already exists, returns existing one
+      requestBody:
+        description: User to add to DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: true
+      responses:
+        201:
+          description: Returns the new entity or existing one
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{username}:
+    get:
+      summary: Return information from a user, if it doen't exist, returns an error.
+      parameters:
+      - name: username
+        in: path
+        description: the ID of the user trying to find
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns info from a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: Unnable to locate user
+components:
+  schemas:
+    HealthCheck:
+      required:
+      - ok
+      properties:
+        ok:
+          type: boolean
+    NewUser:
+      required:
+      - email
+      - username
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+    User:
+      required:
+      - email
+      - id
+      - username
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
