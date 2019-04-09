@@ -1,0 +1,158 @@
+openapi: 3.0.0
+info:
+  title: Reporting Service
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/miker1423/reporting_service/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /health:
+    get:
+      summary: Returns the status of the service
+      responses:
+        200:
+          description: The status of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+  /users/{id}:
+    get:
+      summary: Returns report summary for the given user
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the user requesting the info
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Returns the info of the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserReport'
+        404:
+          description: No information for the user
+  /admin/tasks:
+    get:
+      summary: Returns the report for all user tasks
+      responses:
+        200:
+          description: Returns the all users tasks report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsersTaskReport'
+  /admin/habits:
+    get:
+      summary: Returns the report for all user habits
+      responses:
+        200:
+          description: Returs the all users habits report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsersHabitReport'
+components:
+  schemas:
+    AllUsersHabitReport:
+      required:
+      - allHabits
+      - bestHabitsPerUser
+      - worstHabitsPerUser
+      properties:
+        allHabits:
+          type: array
+          items:
+            $ref: '#/components/schemas/HabitTuple'
+        worstHabitsPerUser:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserHabitTuple'
+        bestHabitsPerUser:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserHabitTuple'
+    UserHabitTuple:
+      required:
+      - description
+      - level
+      - username
+      properties:
+        username:
+          type: string
+        level:
+          type: integer
+        description:
+          type: string
+    HabitTuple:
+      required:
+      - count
+      - level
+      properties:
+        level:
+          type: integer
+        count:
+          type: integer
+    AllUsersTaskReport:
+      required:
+      - availableTask
+      - availableToBeDone
+      - completedAfterDue
+      - completedBeforeDue
+      - delayedTask
+      properties:
+        completedBeforeDue:
+          type: integer
+        completedAfterDue:
+          type: integer
+        delayedTask:
+          type: integer
+        availableTask:
+          type: integer
+        availableToBeDone:
+          type: integer
+    HealthCheck:
+      required:
+      - ok
+      properties:
+        ok:
+          type: boolean
+    UserReport:
+      required:
+      - habits
+      - id
+      - tasks
+      properties:
+        id:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskReport'
+        habit:
+          type: array
+          items:
+            $ref: '#/components/schemas/HabitReport'
+    TaskReport:
+      required:
+      - date
+      - description
+      properties:
+        date:
+          type: string
+        description:
+          type: string
+    HabitReport:
+      required:
+      - description
+      - isGood
+      properties:
+        isGood:
+          type: boolean
+        description:
+          type: string
