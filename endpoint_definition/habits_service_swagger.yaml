@@ -1,0 +1,163 @@
+openapi: 3.0.0
+info:
+    version: "1.0.0"
+    title: "habitsAPI"
+    description: "api"
+paths:
+    /habits/{user}/get:
+        get:
+            summary: Returns all habits from the specified user.
+            parameters:
+                - name: user
+                  in: path
+                  description: The ID of the user requesting.
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: The list of habits from the user.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Habit"
+                404:
+                    description: Habits for this user were not found.
+    /habits/{user}/{id}/get:
+        get:
+            summary: Returns specified habit from the specified user.
+            parameters:
+                - name: user
+                  in: path
+                  description: The ID of the user requesting.
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      type: string
+                - name: id
+                  in: path
+                  description: The ID of the requested ticket.
+                  required: true
+                  style: simple
+                  explode: false
+                  schema:
+                      type: string
+            responses:
+                200:
+                    description: The specified habit from the specified user.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Habit"
+                404:
+                    description: The specified habit for this user was not found.
+    /habits/{user}/create:
+      post:
+          summary: Returns the id of the new habit created.
+          parameters:
+              - name: user
+                in: path
+                description: The ID of the user who adds the habit.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                    type: string
+          responses:
+              201:
+                  description: The specified habit from the specified user.
+                  content:
+                      application/json:
+                          schema:
+                              $ref: "#/components/schemas/Habit"
+              412:
+                  description: The user was not found, so the habit could not be created. 
+    /habits/{user}/{id}/edit:
+      patch:
+          summary: Returns the id of the habit that was edited.
+          parameters:
+              - name: user
+                in: path
+                description: The ID of the user who edits the habit.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                  type: string
+              - name: id
+                in: path
+                description: The ID of the habit to be edited.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                  type: string
+          responses:
+              200:
+                  description: The specified habit from the specified user.
+                  content:
+                      application/json:
+                          schema:
+                              $ref: "#/components/schemas/Habit"
+              404:
+                  description: Ticket was not found.
+    /habits/{user}/{id}/delete:
+      delete:
+          summary: Returns the id of the habit that was deleted.
+          parameters:
+              - name: user
+                in: path
+                description: The ID of the user who deletes the habit.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                  type: string
+              - name: id
+                in: path
+                description: The ID of the habit to be deleted.
+                required: true
+                style: simple
+                explode: false
+                schema:
+                  type: string
+          responses:
+              200:
+                  description: The specified habit from the specified user.
+                  content:
+                      application/json:
+                          schema:
+                              $ref: "#/components/schemas/Habit"
+              404:
+                  description: Ticket was not found.
+
+components:
+    schemas:
+        Habit:
+            required:
+                - difficulty
+                - type
+                - score
+                - description
+                - title
+                - id
+            properties:
+                difficulty:
+                    type: integer
+                type:
+                    type: string
+                score:
+                    type: number
+                description:
+                    type: string
+                title:
+                    type: string
+                id:
+                    type: string
+# Added by API Auto Mocking Plugin
+servers:
+    - description: SwaggerHub API Auto Mocking
+      url: https://virtserver.swaggerhub.com/rosamariaramirez/habitsAPI/1.0.0
