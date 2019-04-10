@@ -1,14 +1,14 @@
 @startuml Deployment Diagram
 
-component "Client" as client
+component "Client (Vue.js)" as client
 node "Inner services" {
-    component "Auth Service" as auth
-    component "Tasks Services" as task
-    component "Habits service" as habits
-    component "Reporting service" as reporting
-    component "Service Registry" as registry
-    component "Message Broker" as broker
-    component "Gateway" as gateway
+    component "Auth Service (Rust)" as auth
+    component "Tasks Services (Node.js)" as task
+    component "Habits service (.NET)" as habits
+    component "Reporting service (JVM)" as reporting
+    component "Service Registry (Rust)" as registry
+    component "Message Broker (RabbitMQ)" as broker
+    component "Gateway (NGINX)" as gateway
 }
 
 client <-up-> gateway
