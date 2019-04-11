@@ -23,9 +23,9 @@ habits <--> registry
 task <--> registry
 reporting <--> registry
 
-broker -[#OrangeRed]-> reporting
-broker <-[#OrangeRed]- auth
-broker <-[#OrangeRed]- task
-broker <-[#OrangeRed]- habits
+broker <-[#OrangeRed]-> reporting
+broker <-[#OrangeRed]-> auth
+broker <-[#OrangeRed]-> task
+broker <-[#OrangeRed]-> habits
 
 @enduml
