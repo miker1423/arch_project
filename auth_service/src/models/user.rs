@@ -23,6 +23,10 @@ impl User {
         User { username, email, id, password_hash }
     }
 
+    pub fn build_no_id(username: String, email: String, password_hash: String) -> User {
+        User { username, email, password_hash, id: String::new() }
+    }
+
     pub fn add_id(self) -> Self {
         User { id: Uuid::new_v4().to_string(), ..self }
     }

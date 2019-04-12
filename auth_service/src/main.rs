@@ -18,10 +18,18 @@ fn main() {
 
     server::new(move || {
         App::with_state(state.clone())
-            .resource("/", |r| r.method(Method::POST).with(handlers::greet))
-            .resource("/add/{username}/{email}", |r| r.f(handlers::register_user))
-            .resource("/find/{email}", |r| r.f(handlers::find_user))
-
+            .resource("/health", |r| r.method(Method::GET).with(handlers::is_healthy))
+            .scope("/users", |users| {
+                users.resource("", |r| {
+                  r.method(Method::PUT).with(handlers::update_user);
+                  r.method(Method::POST).with(handlers::create_user);
+                }).resource("/{username}", |r| {
+                  r.method(Method::GET).with(handlers::find_user);
+                  r.method(Method::DELETE).with(handlers::delete_user);
+                }).resource("/login", |r| {
+                    r.method(Method::POST).with(handlers::login);
+                })
+            })
     })
     .bind(address)
     .expect("Can not bind to port 8000")

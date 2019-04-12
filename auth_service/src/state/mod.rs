@@ -58,7 +58,7 @@ impl AppState {
 
     pub fn add_user(&self, user: User) {
         if let Ok(mut table) = self.users.write() {
-            let _ = table.entry(user.username).or_insert(user);
+            let _ = table.entry(user.username.clone()).or_insert(user);
             if let Ok(mut is_modified) = self.modified.write() {
                 *is_modified = true;
             }
@@ -67,7 +67,7 @@ impl AppState {
 
     pub fn remove_user(&self, user_id: String) -> Option<User> {
         if let Ok(mut table) = self.users.write() {
-            table.remove(user)
+            table.remove(&user_id);
         }
         None
     }
@@ -75,6 +75,17 @@ impl AppState {
     pub fn find_username(&self, email: &str) -> Option<String> {
         if let Some(username) = self.users.read().unwrap().get(email) {
             return Some(username.username.clone());
+        }
+        None
+    }
+
+    pub fn find_user(&self, username: &str) -> Option<User> {
+        if let Some(table) = self.users.read().ok() {
+            if let Some(user) = table.get(username) {
+                return Some(user.clone());
+            } else {
+                return None;
+            }
         }
         None
     }
