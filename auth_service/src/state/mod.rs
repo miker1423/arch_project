@@ -1,8 +1,8 @@
 use std::collections::HashMap;
-use crate::user::User;
 use std::sync::RwLock;
 use std::fs::File;
 use std::io::Read;
+use crate::models::user::User;
 
 pub struct AppState {
     modified: RwLock<bool>,
@@ -50,15 +50,26 @@ impl AppState {
         }
     }
 
+    pub fn update_user(&self, user: &mut User) {
+        if let Ok(mut table) = self.users.write() {
+            table.get_mut(&user.username).replace(user);
+        }
+    }
+
     pub fn add_user(&self, user: User) {
         if let Ok(mut table) = self.users.write() {
-            if !table.contains_key(&user.email) {
-                table.insert(user.email.clone(), user);
-                if let Ok(mut is_modified) = self.modified.write() {
-                    *is_modified = true;
-                }
+            let _ = table.entry(user.username).or_insert(user);
+            if let Ok(mut is_modified) = self.modified.write() {
+                *is_modified = true;
             }
         }
+    }
+
+    pub fn remove_user(&self, user_id: String) -> Option<User> {
+        if let Ok(mut table) = self.users.write() {
+            table.remove(user)
+        }
+        None
     }
 
     pub fn find_username(&self, email: &str) -> Option<String> {

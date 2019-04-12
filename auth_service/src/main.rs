@@ -1,7 +1,7 @@
-mod user;
 mod state;
 mod db_worker;
 mod handlers;
+mod models;
 
 use crate::state::AppState;
 use actix_web::{server, App, };
