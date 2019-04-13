@@ -4,7 +4,7 @@ mod handlers;
 mod models;
 
 use crate::state::AppState;
-use actix_web::{server, App, };
+use actix_web::{server, App};
 use std::sync::Arc;
 use actix_web::http::Method;
 

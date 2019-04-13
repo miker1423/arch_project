@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::sync::RwLock;
 use std::fs::File;
 use std::io::Read;
-use crate::models::user::User;
+use crate::models::{user::User, user_minimal::UserMinimal};
 
 pub struct AppState {
     modified: RwLock<bool>,
@@ -50,13 +50,33 @@ impl AppState {
         }
     }
 
-    pub fn update_user(&self, user: &mut User) {
-        if let Ok(mut table) = self.users.write() {
-            table.get_mut(&user.username).replace(user);
+    pub fn is_modified(&self) -> bool { *self.modified.read().unwrap() }
+
+    pub fn finish_write(&self) {
+        if let Ok(mut modified) = self.modified.write() {
+            *modified = false;
         }
     }
+}
 
-    pub fn add_user(&self, user: User) {
+impl Db for AppState {
+    fn update_user(&self, user: &mut UserMinimal) -> Option<UserMinimal> {
+        if let Ok(mut table) = self.users.write() {
+            let mut result = table.get_mut(&user.username);
+            if let None = result {
+                return None;
+            }
+
+            let mut saved_user = result.
+            user.change_email(&mut saved_user);
+            result.replace(&mut saved_user.clone());
+            return Some(UserMinimal::from(saved_user.clone()));
+        }
+
+        return None;
+    }
+
+    fn add_user(&self, user: User) {
         if let Ok(mut table) = self.users.write() {
             let _ = table.entry(user.username.clone()).or_insert(user);
             if let Ok(mut is_modified) = self.modified.write() {
@@ -65,36 +85,36 @@ impl AppState {
         }
     }
 
-    pub fn remove_user(&self, user_id: String) -> Option<User> {
-        if let Ok(mut table) = self.users.write() {
-            table.remove(&user_id);
-        }
-        None
+    fn remove_user(&self, user_id: String) -> Option<User> {
+        return match self.users.write() {
+            Ok(mut table) => table.remove(&user_id),
+            _ => None
+        };
     }
 
-    pub fn find_username(&self, email: &str) -> Option<String> {
-        if let Some(username) = self.users.read().unwrap().get(email) {
-            return Some(username.username.clone());
-        }
-        None
+    fn find_username(&self, email: &str) -> Option<String> {
+        return match self.users.read().unwrap().get(email) {
+            Some(user) => Some(user.username.clone()),
+            None => None
+        };
     }
 
-    pub fn find_user(&self, username: &str) -> Option<User> {
+    fn find_user(&self, username: &str) -> Option<User> {
         if let Some(table) = self.users.read().ok() {
-            if let Some(user) = table.get(username) {
-                return Some(user.clone());
-            } else {
-                return None;
-            }
+            return match table.get(username) {
+                Some(user) => Some(user.clone()),
+                None => None
+            };
         }
         None
     }
+}
 
-    pub fn is_modified(&self) -> bool { *self.modified.read().unwrap() }
 
-    pub fn finish_write(&self) {
-        if let Ok(mut modified) = self.modified.write() {
-            *modified = false;
-        }
-    }
+pub trait Db {
+    fn update_user(&self, user: &mut UserMinimal) -> Option<UserMinimal>;
+    fn add_user(&self, user: User);
+    fn remove_user(&self, user_id: String) -> Option<User>;
+    fn find_username(&self, email: &str) -> Option<String>;
+    fn find_user(&self, username: &str) -> Option<User>;
 }

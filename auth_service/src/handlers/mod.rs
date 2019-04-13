@@ -1,42 +1,54 @@
-
-use crate::state::AppState;
-use actix_web::{Responder, HttpRequest, Json, HttpResponse, Path, ResponseError};
+use actix_web::{Responder, HttpRequest, Json, HttpResponse, Path};
 use std::sync::Arc;
-use uuid::Uuid;
-use crate::models::user::User;
-use crate::models::user_view::UserView;
+use crate::models::{
+    user::User,
+    user_view::UserView,
+    user_minimal::UserMinimal
+};
+use crate::state::{AppState, Db};
 
-pub fn create_user((req, user) : (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl Responder {
-    let new_user: User = user.into_inner().into();
-    let new_user = new_user.add_id();
+pub fn create_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl Responder {
+    let user: User = user.into_inner().into();
+    let user = user.add_id();
     let state: &AppState = req.state();
-    state.add_user(new_user.clone());
-    HttpResponse::Ok().json(new_user)
+    state.add_user(user.clone());
+    HttpResponse::Ok().json(UserMinimal::from(user))
 }
 
-pub fn update_user((req, user): (HttpRequest<Arc<AppState>>, Json<User>)) -> impl Responder {
+pub fn update_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserMinimal>)) -> impl Responder {
     HttpResponse::Ok()
 }
 
 pub fn find_user((req, user): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
-    let username = user.into_inner();
     let state: &AppState = req.state();
-    if let Some(user) = state.find_user(user.as_str()) {
-        HttpResponse::Ok().json(user)
-    } else {
-        HttpResponse::BadRequest().finish()
-    }
-
+    return match state.find_user(user.as_str()) {
+        Some(user) => HttpResponse::Ok().json(user),
+        None => HttpResponse::BadRequest().finish()
+    };
 }
 
 pub fn delete_user((req, username): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
-    HttpResponse::Ok()
+    let state: &AppState = req.state();
+    return match state.remove_user(username.into_inner()) {
+        Some(user) => HttpResponse::Ok().json(UserMinimal::from(user)),
+        None => HttpResponse::BadRequest().finish()
+    };
 }
 
-pub fn login((req, user): (HttpRequest<Arc<AppState>>, Json<User>)) -> impl Responder {
-    HttpResponse::Ok()
+pub fn login((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl Responder {
+    let user: User = user.into_inner().into();
+    let state: &AppState = req.state();
+    if let Some(u) = state.find_user(user.username.as_str()) {
+        if u.password_hash.eq(&format!("{:x?}", user.password_hash)) {
+            return HttpResponse::Ok().finish();
+        } else {
+            return HttpResponse::BadRequest().finish();
+        }
+    } else {
+        return HttpResponse::BadRequest().finish();
+    }
 }
 
-pub fn is_healthy(req: HttpRequest<Arc<AppState>>) -> impl Responder {
+pub fn is_healthy(_: HttpRequest<Arc<AppState>>) -> impl Responder {
     HttpResponse::Ok()
 }
