@@ -67,7 +67,7 @@ impl Db for AppState {
                 return None;
             }
 
-            let mut saved_user = result.
+            let mut saved_user = result;
             user.change_email(&mut saved_user);
             result.replace(&mut saved_user.clone());
             return Some(UserMinimal::from(saved_user.clone()));
