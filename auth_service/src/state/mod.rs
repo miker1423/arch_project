@@ -3,6 +3,7 @@ use std::sync::RwLock;
 use std::fs::File;
 use std::io::Read;
 use crate::models::{user::User, user_minimal::UserMinimal};
+use std::convert::TryFrom;
 
 pub struct AppState {
     modified: RwLock<bool>,
@@ -14,25 +15,22 @@ impl AppState {
     pub fn load_from_file(path: &str) -> AppState {
         let file = File::open(path);
         if let Err(_) = file {
-            println!("DB not found, creating new one");
             if let Err(_) = File::create(path) {
-                println!("Unable to create DB");
-                panic!("FUCK!");
             }
             return AppState::new_with_path(path);
         }
 
         let mut text = String::new();
         if let Err(_) = file.unwrap().read_to_string(&mut text) {
-            println!("Failed to read file");
             return AppState::new_with_path(path);
         }
 
         let full_text: Vec<&str> = text.split("\n").collect();
         let mut map = HashMap::<String, User>::new();
         for line in full_text {
-            let user = User::from(line);
-            map.insert(user.username.clone(), user);
+            if let Ok(user) = User::try_from(line) {
+                map.insert(user.username.clone(), user);
+            }
         }
 
         AppState {
@@ -57,20 +55,29 @@ impl AppState {
             *modified = false;
         }
     }
+
+    pub fn mark_modified(&self) {
+        if let Ok(mut is_modified) = self.modified.write() {
+            *is_modified = true;
+        }
+    }
 }
 
 impl Db for AppState {
     fn update_user(&self, user: &mut UserMinimal) -> Option<UserMinimal> {
         if let Ok(mut table) = self.users.write() {
-            let mut result = table.get_mut(&user.username);
-            if let None = result {
-                return None;
-            }
+            let mut happend = false;
+            table.entry(user.username.clone()).and_modify(|f| {
+                user.change_email(f);
+                happend = true;
+            });
 
-            let mut saved_user = result;
-            user.change_email(&mut saved_user);
-            result.replace(&mut saved_user.clone());
-            return Some(UserMinimal::from(saved_user.clone()));
+            return if happend {
+                self.mark_modified();
+                Some(user.clone())
+            } else {
+                None
+            }
         }
 
         return None;
@@ -79,15 +86,16 @@ impl Db for AppState {
     fn add_user(&self, user: User) {
         if let Ok(mut table) = self.users.write() {
             let _ = table.entry(user.username.clone()).or_insert(user);
-            if let Ok(mut is_modified) = self.modified.write() {
-                *is_modified = true;
-            }
+            self.mark_modified();
         }
     }
 
     fn remove_user(&self, user_id: String) -> Option<User> {
         return match self.users.write() {
-            Ok(mut table) => table.remove(&user_id),
+            Ok(mut table) => table.remove(&user_id).and_then(|u| {
+                self.mark_modified();
+                Some(u)
+            }),
             _ => None
         };
     }

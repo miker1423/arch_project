@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use crate::models::user::User;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct UserMinimal {
     pub username: String,
     pub email: String,
@@ -10,7 +10,7 @@ pub struct UserMinimal {
 
 impl UserMinimal {
     pub fn change_email(&self, user: &mut User) {
-        user.email = self.email;
+        user.email = self.email.clone();
     }
 }
 

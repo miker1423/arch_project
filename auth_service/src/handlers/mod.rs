@@ -1,4 +1,4 @@
-use actix_web::{Responder, HttpRequest, Json, HttpResponse, Path};
+use actix_web::{Responder, HttpRequest, Json, HttpResponse, Path };
 use std::sync::Arc;
 use crate::models::{
     user::User,
@@ -16,7 +16,12 @@ pub fn create_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) ->
 }
 
 pub fn update_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserMinimal>)) -> impl Responder {
-    HttpResponse::Ok()
+    let state: &AppState = req.state();
+    let result = state.update_user(&mut user.clone());
+    return match result {
+        Some(user) => HttpResponse::Ok().json(user),
+        _ => HttpResponse::BadRequest().finish()
+    };
 }
 
 pub fn find_user((req, user): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
@@ -39,7 +44,7 @@ pub fn login((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl 
     let user: User = user.into_inner().into();
     let state: &AppState = req.state();
     if let Some(u) = state.find_user(user.username.as_str()) {
-        if u.password_hash.eq(&format!("{:x?}", user.password_hash)) {
+        if u.password_hash.eq(&user.password_hash) {
             return HttpResponse::Ok().finish();
         } else {
             return HttpResponse::BadRequest().finish();

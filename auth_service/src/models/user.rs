@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use std::convert::TryFrom;
+use std::error::Error;
+use std::fmt::Display;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct User {
@@ -32,19 +35,32 @@ impl User {
     }
 }
 
-impl From<&str> for User {
-    fn from(source: &str) -> User {
+#[derive(Debug)]
+pub struct UserError;
+
+impl Error for UserError {
+}
+
+impl Display for UserError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "crap")
+    }
+}
+
+impl TryFrom<&str> for User {
+    type Error = UserError;
+    fn try_from(source: &str) -> Result<User, UserError> {
         let splitted: Vec<&str> = source.split(',').collect();
         if splitted.len() != 4 {
-            return User::new();
+            return Err(UserError {});
         }
 
-        return User::build(
+        Ok(User::build(
             String::from(splitted[0]),
             String::from(splitted[2]),
             String::from(splitted[1]),
             String::from(splitted[3])
-        )
+        ))
     }
 }
 
