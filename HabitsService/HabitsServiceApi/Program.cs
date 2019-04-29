@@ -22,7 +22,7 @@ namespace HabitsServiceApi
             WebHost.CreateDefaultBuilder(args)
                 .UseKestrel(options =>
                 {
-                    options.Listen(IPAddress.Loopback, 5080); //HTTP port
+                    options.Listen(IPAddress.Loopback, 5080); //HTTP port http://127.0.0.1:5080/api/values
                 })
                 .UseStartup<Startup>();
                 }
