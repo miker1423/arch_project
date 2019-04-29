@@ -1,5 +1,5 @@
-use serde::{Serialize, Deserialize};
 use crate::models::user::User;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct UserMinimal {

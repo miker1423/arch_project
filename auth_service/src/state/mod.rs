@@ -1,8 +1,8 @@
+use crate::models::{user::User, user_minimal::UserMinimal};
 use std::collections::HashMap;
 use std::sync::RwLock;
 use std::fs::File;
 use std::io::Read;
-use crate::models::{user::User, user_minimal::UserMinimal};
 use std::convert::TryFrom;
 
 pub struct AppState {
@@ -33,6 +33,7 @@ impl AppState {
             }
         }
 
+        println!("Loaded");
         AppState {
             modified: RwLock::new(false),
             file_path: String::from(path),

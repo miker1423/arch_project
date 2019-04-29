@@ -3,7 +3,8 @@ use std::sync::Arc;
 use crate::models::{
     user::User,
     user_view::UserView,
-    user_minimal::UserMinimal
+    user_minimal::UserMinimal,
+    token::{TokenProducer, TokenSender }
 };
 use crate::state::{AppState, Db};
 
@@ -27,7 +28,7 @@ pub fn update_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserMinimal>))
 pub fn find_user((req, user): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
     let state: &AppState = req.state();
     return match state.find_user(user.as_str()) {
-        Some(user) => HttpResponse::Ok().json(user),
+        Some(user) => HttpResponse::Ok().json(UserMinimal::from(user)),
         None => HttpResponse::BadRequest().finish()
     };
 }
@@ -45,7 +46,9 @@ pub fn login((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl 
     let state: &AppState = req.state();
     if let Some(u) = state.find_user(user.username.as_str()) {
         if u.password_hash.eq(&user.password_hash) {
-            return HttpResponse::Ok().finish();
+            let token = TokenProducer::retrieve_token(&user);
+            let token = TokenSender { token: token.unwrap() };
+            return HttpResponse::Ok().json(token);
         } else {
             return HttpResponse::BadRequest().finish();
         }
