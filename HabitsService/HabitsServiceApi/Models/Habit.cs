@@ -7,21 +7,22 @@ namespace HabitsServiceApi.Models
 {
     public class Habit
     {
-        private int difficulty;
-        private string type;
-        private double score;
-        private string description;
-        private string title;
-        private string id;
+        public Guid UserId { get; set; }
+        public int Difficulty { get; set; }
+        public string Type { get; set; }
+        public double Score { get; set; }
+        public string Description { get; set; }
+        public string Title { get; set; }
+        public string Id { get; set; }
 
         public Habit(int difficulty, string type, double score, string description, string title, string id)
         {
             this.SetDifficulty(difficulty);
-            this.Settype(type ?? throw new ArgumentNullException(nameof(type)));
+            this.Settype(type);
             this.Setscore(score);
-            this.Setdescription(description ?? throw new ArgumentNullException(nameof(description)));
-            this.Settitle(title ?? throw new ArgumentNullException(nameof(title)));
-            this.Setid(id ?? throw new ArgumentNullException(nameof(id)));
+            this.Setdescription(description);
+            this.Settitle(title);
+            this.Setid(id);
         }
 
         public Habit()
@@ -29,64 +30,34 @@ namespace HabitsServiceApi.Models
 
         }
 
-        private int GetDifficulty()
-        {
-            return difficulty;
-        }
-
         private void SetDifficulty(int value)
         {
-            difficulty = value;
-        }
-
-        private string Gettype()
-        {
-            return type;
+            Difficulty = value;
         }
 
         private void Settype(string value)
         {
-            type = value;
-        }
-
-        private double Getscore()
-        {
-            return score;
+            Type = value;
         }
 
         private void Setscore(double value)
         {
-            score = value;
-        }
-
-        private string Getdescription()
-        {
-            return description;
+            Score = value;
         }
 
         private void Setdescription(string value)
         {
-            description = value;
-        }
-
-        private string Gettitle()
-        {
-            return title;
+            Description = value;
         }
 
         private void Settitle(string value)
         {
-            title = value;
-        }
-
-        private string Getid()
-        {
-            return id;
+            Title = value;
         }
 
         private void Setid(string value)
         {
-            id = value;
+            Id = value;
         }
     }
 }

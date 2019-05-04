@@ -10,13 +10,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using HabitsServiceApi.Models;
+using Microsoft.EntityFrameworkCore.InMemory;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace HabitsServiceApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment env;
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            env = hostingEnvironment;
             Configuration = configuration;
         }
 
@@ -25,6 +31,23 @@ namespace HabitsServiceApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var DB_URL = Configuration.GetConnectionString("DB_URL");
+            var DB_PORT = Configuration.GetConnectionString("DB_PORT");
+            var DB_USER = Configuration.GetConnectionString("DB_USER");
+            var DB_PASSWORD = Configuration.GetConnectionString("DB_PASSWORD");
+
+            services.AddDbContext<HabitsContext>(options =>
+            {
+                if (env.IsDevelopment())
+                {
+                    options.UseInMemoryDatabase("habitsDb");
+                }
+                else
+                {
+                    options.UseNpgsql($"{DB_USER}:{DB_PASSWORD}@{DB_URL}:{DB_PORT}");
+                }
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
