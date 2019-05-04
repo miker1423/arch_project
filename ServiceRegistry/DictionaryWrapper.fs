@@ -24,17 +24,15 @@ type DictionaryWrapper() =
         member this.FindServiceByType typeSearch =
             store.Values
             |> Seq.where(fun service -> service.ServiceDefinition.ServiceType.Equals(typeSearch))
-            |> Seq.map(fun result -> result.ServiceDefinition)
             |> Seq.toList
 
         member this.GetServices =
-            store.Values 
-            |> Seq.map(fun service -> service.ServiceDefinition) 
+            store.Values
             |> Seq.toList
 
         member this.FindServiceById id = 
             if store.ContainsKey(id) then 
-                store.Item(id).ServiceDefinition 
+                store.Item(id) 
                 |> Some
             else None                   
              
