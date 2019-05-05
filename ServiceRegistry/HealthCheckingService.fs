@@ -37,6 +37,7 @@ type TimedService(db: IServiceRegistryDb, client: IHttpClientFactory , logger: I
             timer.Elapsed.Add elapsed
             timer.Start()
             Task.CompletedTask
+            
         member this.StopAsync(token: CancellationToken) = 
             timer.Stop()
             Task.CompletedTask        

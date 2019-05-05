@@ -65,7 +65,7 @@ let servicesRouter = router {
     get "/" findAllServices
     post "/" addService
     getf "/%s" findService
-    deletef "%s" deleteService
+    deletef "/%s" deleteService
 }
 
 let appRouter = router {
