@@ -12,6 +12,13 @@ namespace HabitsServiceApi.Models
         Both
     }
 
+    public enum HabitDifficulties
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+
     public class Algorithm
     {
         private Algorithm _next;
