@@ -10,12 +10,12 @@ namespace HabitsServiceApi.Interfaces
     {
         IEnumerable<Habit> GetAllHabits();
 
-        int CreateHabit();
+        Guid CreateHabit(Habit habit);
 
-        Habit GetHabit();
+        Habit GetHabit(Guid id);
 
-        int UpdateHabit();
+        Habit UpdateHabit(Habit habit);
 
-        int DeleteHabit();
+        Habit DeleteHabit(Guid id);
     }
 }

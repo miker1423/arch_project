@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using HabitsServiceApi.Models;
 using Microsoft.EntityFrameworkCore.InMemory;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using HabitsServiceApi.Interfaces;
+using HabitsServiceApi.Services;
 
 namespace HabitsServiceApi
 {
@@ -36,6 +38,8 @@ namespace HabitsServiceApi
             var DB_USER = Configuration.GetConnectionString("DB_USER");
             var DB_PASSWORD = Configuration.GetConnectionString("DB_PASSWORD");
 
+            services.AddScoped<IHabitsService, HabitsService>();
+
             services.AddDbContext<HabitsContext>(options =>
             {
                 if (env.IsDevelopment())
@@ -57,14 +61,17 @@ namespace HabitsServiceApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
             }
             else
             {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(options => {
+                options.MapRoute(
+                    "api",
+                    "api/{controller}/{id?}");
+            });
         }
     }
 }

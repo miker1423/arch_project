@@ -2,6 +2,7 @@
 using HabitsServiceApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,29 +10,40 @@ namespace HabitsServiceApi.Services
 {
     public class HabitsService : IHabitsService
     {
-        public int CreateHabit()
+        private readonly HabitsContext _habitsContext;
+
+        public HabitsService(HabitsContext habitsContext)
         {
-            throw new NotImplementedException();
+            _habitsContext = habitsContext;
         }
 
-        public int DeleteHabit()
+        public Guid CreateHabit(Habit habit)
         {
-            throw new NotImplementedException();
+            habit.Id = Guid.NewGuid();
+            _habitsContext.Habits.Add(habit);
+            _habitsContext.SaveChanges();
+            return habit.Id;
         }
 
-        public IEnumerable<Habit> GetAllHabits()
+        public Habit DeleteHabit(Guid id)
         {
-            throw new NotImplementedException();
+            Habit habitToRemove = _habitsContext.Habits.First(habit => habit.Id == id);
+            _habitsContext.Habits.Remove(habitToRemove);
+            _habitsContext.SaveChanges();
+            return habitToRemove;
         }
 
-        public Habit GetHabit()
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<Habit> GetAllHabits() => _habitsContext.Habits.ToList();
 
-        public int UpdateHabit()
+        public Habit GetHabit(Guid habitId) 
+            => _habitsContext.Habits.First(habit => habit.Id == habitId);
+
+        public Habit UpdateHabit(Habit habit)
         {
-            throw new NotImplementedException();
+            _habitsContext.Habits.Update(habit);
+            _habitsContext.SaveChanges();
+
+            return habit;
         }
     }
 }

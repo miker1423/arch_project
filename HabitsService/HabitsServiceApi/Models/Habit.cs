@@ -13,16 +13,18 @@ namespace HabitsServiceApi.Models
         public double Score { get; set; }
         public string Description { get; set; }
         public string Title { get; set; }
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
-        public Habit(int difficulty, string type, double score, string description, string title, string id)
+        private static Habit _emptyHabit = new Habit();
+
+        public Habit(int difficulty, string type, double score, string description, string title, Guid id)
         {
-            this.SetDifficulty(difficulty);
-            this.Settype(type);
-            this.Setscore(score);
-            this.Setdescription(description);
-            this.Settitle(title);
-            this.Setid(id);
+            Difficulty = difficulty;
+            Type = type;
+            Score = score;
+            Description = description;
+            Title = title;
+            Id = id;
         }
 
         public Habit()
@@ -30,34 +32,11 @@ namespace HabitsServiceApi.Models
 
         }
 
-        private void SetDifficulty(int value)
+        public static Habit EmptyHabit()
         {
-            Difficulty = value;
+            return _emptyHabit;
         }
 
-        private void Settype(string value)
-        {
-            Type = value;
-        }
 
-        private void Setscore(double value)
-        {
-            Score = value;
-        }
-
-        private void Setdescription(string value)
-        {
-            Description = value;
-        }
-
-        private void Settitle(string value)
-        {
-            Title = value;
-        }
-
-        private void Setid(string value)
-        {
-            Id = value;
-        }
     }
 }

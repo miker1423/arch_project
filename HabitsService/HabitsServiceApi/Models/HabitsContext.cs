@@ -8,6 +8,16 @@ namespace HabitsServiceApi.Models
 {
     public class HabitsContext: DbContext
     {
-        public DbSet<Habit> Habits { get; set; }
+        public HabitsContext (DbContextOptions<HabitsContext> dbContextOptions) : base(dbContextOptions) {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+        }
+
+    public DbSet<Habit> Habits { get; set; }
     }
+
 }
