@@ -17,7 +17,10 @@ type SavedServiceDefinition = {
 
 let isAlive(client: HttpClient, service: ServiceDefinition) =
     async {
-        let url = sprintf "http://%s:%i/health" service.IpAddress service.Port
-        let! response = client.GetAsync(url) |> Async.AwaitTask
-        return response.IsSuccessStatusCode
+        try        
+            let url = sprintf "http://%s:%i/health" service.IpAddress service.Port
+            let! response = client.GetAsync(url) |> Async.AwaitTask
+            return response.IsSuccessStatusCode
+        with 
+        | _ -> return false
     }

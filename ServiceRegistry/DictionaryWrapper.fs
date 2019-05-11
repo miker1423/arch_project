@@ -3,15 +3,16 @@ module DictionaryWrapper
 open System
 open Models
 open ServiceDb
+open System.Collections.Generic
 
 type DictionaryWrapper() =
-    let store = dict[]
+    let store = new Dictionary<Guid, SavedServiceDefinition>()
 
     interface IServiceRegistryDb with 
         member this.Add service = 
             let id = Guid.NewGuid()
             let savedService = { Id = id; ServiceDefinition = service }
-            store.Item(id) <- savedService
+            store.Add(id, savedService)
             savedService
 
         member this.Remove id = 
