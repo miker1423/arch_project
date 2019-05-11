@@ -38,8 +38,8 @@ namespace HabitsServiceApi
             var DB_USER = Configuration.GetConnectionString("DB_USER");
             var DB_PASSWORD = Configuration.GetConnectionString("DB_PASSWORD");
 
+            services.AddHostedService<PresenceService>();
             services.AddScoped<IHabitsService, HabitsService>();
-
             services.AddDbContext<HabitsContext>(options =>
             {
                 if (env.IsDevelopment())
