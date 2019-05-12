@@ -39,11 +39,22 @@ namespace HabitsServiceApi.Services
         public Habit GetHabit(Guid habitId) 
             => _habitsContext.Habits.First(habit => habit.Id == habitId);
 
+        public IEnumerable<Habit> GetHabitsByUserId(Guid userId) => _habitsContext.Habits.Where(habit => habit.UserId == userId);
+
         public Habit UpdateHabit(Habit habit)
         {
             _habitsContext.Habits.Update(habit);
             _habitsContext.SaveChanges();
 
+            return habit;
+        }
+
+        public Habit UpdateScore(Guid habitId, bool add)
+        {
+            Habit habit = GetHabit(habitId);
+            habit.Score = ScoreCalculator.GetScore(habit, add);
+            _habitsContext.Habits.Update(habit);
+            _habitsContext.SaveChanges();
             return habit;
         }
     }

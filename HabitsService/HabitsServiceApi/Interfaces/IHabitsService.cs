@@ -17,5 +17,9 @@ namespace HabitsServiceApi.Interfaces
         Habit UpdateHabit(Habit habit);
 
         Habit DeleteHabit(Guid id);
+
+        Habit UpdateScore(Guid habitId, bool add);
+
+        IEnumerable<Habit> GetHabitsByUserId(Guid userId);
     }
 }

@@ -35,6 +35,19 @@ namespace HabitsServiceApi.Controllers
             return BadRequest();
         }
 
+        // GET api/habits/{userId}
+        [HttpGet("user/{id}")]
+        public IActionResult GetHabitsByUserId(string id)
+        {
+            if (Guid.TryParse(id, out Guid userId))
+            {
+                IEnumerable<Habit> foundHabits = _habitsService.GetHabitsByUserId(userId);
+                if (foundHabits != null && !foundHabits.Any()) return NotFound();
+                return Ok(foundHabits);
+            }
+            return BadRequest();
+        }
+
         // POST api/habits/
         [HttpPost]
         public IActionResult Post([FromBody] Habit habit)
@@ -52,8 +65,32 @@ namespace HabitsServiceApi.Controllers
             return Ok(updatedHabit);
         }
 
+        // PUT api/habits/score/add
+        [HttpPut("score/add/{id}")]
+        public IActionResult AddScore(string id)
+        {
+            if (Guid.TryParse(id, out Guid habitId))
+            {
+                Habit updatedHabit = _habitsService.UpdateScore(habitId, true);
+                return Ok(updatedHabit);
+            }
+            return BadRequest();
+        }
+
+        // PUT api/habits/score/substract
+        [HttpPut("score/substract/{id}")]
+        public IActionResult SubstractScore(string id)
+        {
+            if (Guid.TryParse(id, out Guid habitId))
+            {
+                Habit updatedHabit = _habitsService.UpdateScore(habitId, false);
+                return Ok(updatedHabit);
+            }
+            return BadRequest();
+        }
+
         // DELETE api/habits/{habitId}
-        [HttpDelete("{habitId}")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             if (Guid.TryParse(id, out Guid habitId))
