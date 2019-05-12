@@ -1,10 +1,10 @@
 interface TaskVM {
-    id: string;
+    taskId?: string;
     title: string;
-    desc: string;
+    description: string;
     dueDate: number;
     reminderHour: number;
     reminderDays: number;
     complete: boolean;
-    userId: string;
+    userId?: string;
 }
