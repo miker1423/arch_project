@@ -20,6 +20,7 @@ namespace HabitsServiceApi.Services
         public Guid CreateHabit(Habit habit)
         {
             habit.Id = Guid.NewGuid();
+
             _habitsContext.Habits.Add(habit);
             _habitsContext.SaveChanges();
             return habit.Id;

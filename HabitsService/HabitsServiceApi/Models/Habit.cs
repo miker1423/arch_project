@@ -8,7 +8,7 @@ namespace HabitsServiceApi.Models
     public class Habit
     {
         public Guid UserId { get; set; }
-        public int Difficulty { get; set; }
+        public HabitDifficulties Difficulty { get; set; }
         public string Type { get; set; }
         public double Score { get; set; }
         public string Description { get; set; }
@@ -19,7 +19,7 @@ namespace HabitsServiceApi.Models
 
         public Habit(int difficulty, string type, double score, string description, string title, Guid id)
         {
-            Difficulty = difficulty;
+            Difficulty = (HabitDifficulties) difficulty;
             Type = type;
             Score = score;
             Description = description;
@@ -36,7 +36,5 @@ namespace HabitsServiceApi.Models
         {
             return _emptyHabit;
         }
-
-
     }
 }
