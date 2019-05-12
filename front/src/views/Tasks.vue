@@ -1,17 +1,17 @@
 <template>
   <div class="tasks">
     <h1>Tasks</h1>
-    <TaskComponent/>
+    <TasksWrapper/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import TaskComponent from '@/components/TaskComponent.vue'; // @ is an alias to /src
+import TasksWrapper from '@/components/TasksWrapper.vue'; // @ is an alias to /src
 
 @Component({
   components: {
-      TaskComponent,
+      TasksWrapper,
   },
 })
 
