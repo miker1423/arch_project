@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
@@ -37,7 +37,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
 }
-</script>
+</script>-->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
