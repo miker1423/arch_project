@@ -4,12 +4,13 @@ pub mod service_registry_client {
     use serde::{Serialize, Deserialize};
     use reqwest::{Body, Client};
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
+    #[serde(rename_all = "camelCase")]
     pub struct ServiceDefinition {
         pub service_type: String,
         pub ip_address: String,
         pub port: i32,
-        pub api_version: i32
+        pub api_version: String
     }
 
     impl Into<Body> for ServiceDefinition {
@@ -23,7 +24,8 @@ pub mod service_registry_client {
         }
     }
 
-    #[derive(Serialize, Deserialize)]
+    #[derive(Serialize, Deserialize, Debug)]
+    #[serde(rename_all = "camelCase")]
     pub struct SavedServiceRegistry {
         service_definition: ServiceDefinition,
         pub id: String
@@ -53,7 +55,9 @@ pub mod service_registry_client {
             match result {
                 Ok(mut response) =>
                     if response.status().is_success() {
-                        match response.json() {
+                        let json = response.json();
+                        dbg!(&json);
+                        match json {
                             Ok(t) => Some(t),
                             _ => None
                         }

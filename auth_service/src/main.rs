@@ -12,6 +12,7 @@ use service_registry_client::service_registry_client::{
     ServiceRegistryClient,
     ServiceDefinition
 };
+use uuid::Uuid;
 
 fn main() {
     let address = "127.0.0.1:8000";
@@ -20,14 +21,15 @@ fn main() {
         service_type: "auth_service".into(),
         ip_address: "127.0.0.1".into(),
         port: 8000,
-        api_version: 1
+        api_version: "1".into()
     };
 
     let registry_client = ServiceRegistryClient::new("http://localhost".into(), 8085);
     let result =  registry_client.register_service(service);
+    dbg!(&result);
     let id = match result {
         Some(saved_service) => saved_service.id,
-        None => ""
+        None => "".into()
     };
 
     println!("{}", address);
@@ -56,11 +58,17 @@ fn main() {
     .expect("Can not bind to port 8000")
     .run();
 
-    let removed = registry_client.remove_service(id.into());
-    let message = if removed {
-        "Removed service from registry"
-    } else {
-        "Failed to remove service"
-    };
-    println!(message);
+    let message =
+        match Uuid::parse_str(id.as_str()) {
+            Ok(id) => {
+                let removed = registry_client.remove_service(id);
+                if removed {
+                    "Removed service from registry"
+                } else {
+                    "Failed to remove service"
+                }
+            },
+            _ => "Failed to parse id"
+        };
+    println!("{}", message);
 }

@@ -62,8 +62,8 @@ let deleteService(input: string) =
             task { return Some ctx }
 
 let servicesRouter = router {
-    get "/" findAllServices
-    post "/" addService
+    get "" findAllServices
+    post "" addService
     getf "/%s" findService
     deletef "/%s" deleteService
 }
