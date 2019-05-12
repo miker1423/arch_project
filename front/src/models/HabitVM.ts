@@ -1,8 +1,9 @@
 interface HabitVM {
     difficulty:	number,
-    type: string,
+    type: number,
     score: number,
     description: string,
     title: string,
-    id: string
+    id: string,
+    userId: string
 }
