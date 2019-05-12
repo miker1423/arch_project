@@ -1,4 +1,4 @@
-interface UserTaskReport {
+interface UsersTaskReport {
     completedBeforeDue:	number,
     completedAfterDue:	number
     delayedTask: number,
