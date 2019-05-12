@@ -1,0 +1,39 @@
+module DictionaryWrapper
+
+open System
+open Models
+open ServiceDb
+open System.Collections.Generic
+
+type DictionaryWrapper() =
+    let store = new Dictionary<Guid, SavedServiceDefinition>()
+
+    interface IServiceRegistryDb with 
+        member this.Add service = 
+            let id = Guid.NewGuid()
+            let savedService = { Id = id; ServiceDefinition = service }
+            store.Add(id, savedService)
+            savedService
+
+        member this.Remove id = 
+            if store.ContainsKey(id) then 
+                let service = store.Item(id)
+                if store.Remove(id) then Some service
+                else None                
+            else None      
+
+        member this.FindServiceByType typeSearch =
+            store.Values
+            |> Seq.where(fun service -> service.ServiceDefinition.ServiceType.Equals(typeSearch))
+            |> Seq.toList
+
+        member this.GetServices =
+            store.Values
+            |> Seq.toList
+
+        member this.FindServiceById id = 
+            if store.ContainsKey(id) then 
+                store.Item(id) 
+                |> Some
+            else None                   
+             
