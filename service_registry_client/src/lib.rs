@@ -31,7 +31,7 @@ mod service_registry_client {
 
     fn register_service(service: ServiceDefinition) -> bool {
         let client = reqwest::Client::new();
-        let result = client.post("http://localhost:9595")
+        let result = client.post("http://localhost:8085")
             .body(service)
             .send();
         match result {
@@ -42,7 +42,7 @@ mod service_registry_client {
 
     fn remove_service(id: Uuid) -> bool {
         let client = reqwest::Client::new();
-        let url = format!("http://localhost:9595/{}", id);
+        let url = format!("http://localhost:8085/{}", id);
         let result = client.delete(url.as_str()).send();
         match result {
             Ok(response) => response.status().is_success(),
@@ -51,7 +51,7 @@ mod service_registry_client {
     }
 
     fn get_services() -> Option<Vec<SavedServiceRegistry>> {
-        let response = reqwest::get("http://localhost:9595/");
+        let response = reqwest::get("http://localhost:8085/");
         match response {
             Ok(mut response) =>
                 if response.status().is_success() {
@@ -67,7 +67,7 @@ mod service_registry_client {
     }
 
     fn get_services_by_id(id: Uuid) -> Option<SavedServiceRegistry> {
-        let url = format!("http://localhost:9595/{}", id);
+        let url = format!("http://localhost:8085/{}", id);
         let response = reqwest::get(url.as_str());
         match response {
             Ok(mut response) =>
@@ -84,7 +84,7 @@ mod service_registry_client {
     }
 
     fn get_services_by_type(service_type: String) -> Option<Vec<SavedServiceRegistry>> {
-        let url = format!("http://localhost:9595/{}", service_type);
+        let url = format!("http://localhost:8085/{}", service_type);
         let response = reqwest::get(url.as_str());
         match response {
             Ok(mut response) =>
@@ -103,8 +103,4 @@ mod service_registry_client {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 }
