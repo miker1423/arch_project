@@ -1,15 +1,15 @@
 
-mod service_registry_client {
+pub mod service_registry_client {
     use uuid::Uuid;
     use serde::{Serialize, Deserialize};
-    use reqwest::Body;
+    use reqwest::{Body, Client};
 
     #[derive(Serialize, Deserialize)]
-    struct ServiceDefinition {
-        service_type: String,
-        ip_address: String,
-        port: i32,
-        api_version: i32
+    pub struct ServiceDefinition {
+        pub service_type: String,
+        pub ip_address: String,
+        pub port: i32,
+        pub api_version: i32
     }
 
     impl Into<Body> for ServiceDefinition {
@@ -24,79 +24,104 @@ mod service_registry_client {
     }
 
     #[derive(Serialize, Deserialize)]
-    struct SavedServiceRegistry {
+    pub struct SavedServiceRegistry {
         service_definition: ServiceDefinition,
-        id: String
+        pub id: String
     }
 
-    fn register_service(service: ServiceDefinition) -> bool {
-        let client = reqwest::Client::new();
-        let result = client.post("http://localhost:8085")
-            .body(service)
-            .send();
-        match result {
-            Ok(response) => response.status().is_success(),
-            Err(_) => false
+    pub struct ServiceRegistryClient {
+        http_client: Client,
+        base_url: String,
+        port: i32
+    }
+
+    impl ServiceRegistryClient {
+        pub fn new(base_url: String, port: i32) -> ServiceRegistryClient {
+            let http_client = Client::new();
+            ServiceRegistryClient {
+                http_client,
+                base_url,
+                port
+            }
         }
-    }
 
-    fn remove_service(id: Uuid) -> bool {
-        let client = reqwest::Client::new();
-        let url = format!("http://localhost:8085/{}", id);
-        let result = client.delete(url.as_str()).send();
-        match result {
-            Ok(response) => response.status().is_success(),
-            Err(_) => false
-        }
-    }
-
-    fn get_services() -> Option<Vec<SavedServiceRegistry>> {
-        let response = reqwest::get("http://localhost:8085/");
-        match response {
-            Ok(mut response) =>
-                if response.status().is_success() {
-                    match response.json() {
-                        Ok(t) => Some(t),
-                        _ => None
+        pub fn register_service(&self, service: ServiceDefinition) -> Option<SavedServiceRegistry> {
+            let url = format!("{}:{}/services", self.base_url, self.port);
+            let result = self.http_client.post(url.as_str())
+                .json(&service)
+                .send();
+            match result {
+                Ok(mut response) =>
+                    if response.status().is_success() {
+                        match response.json() {
+                            Ok(t) => Some(t),
+                            _ => None
+                        }
+                    } else {
+                        None
                     }
-                } else {
-                    None
-                }
-            _ => None
+                Err(_) => None
+            }
         }
-    }
 
-    fn get_services_by_id(id: Uuid) -> Option<SavedServiceRegistry> {
-        let url = format!("http://localhost:8085/{}", id);
-        let response = reqwest::get(url.as_str());
-        match response {
-            Ok(mut response) =>
-                if response.status().is_success() {
-                    match response.json() {
-                        Ok(t) => Some(t),
-                        _ => None
-                    }
-                } else {
-                    None
-                }
-            _ => None
+        pub fn remove_service(&self, id: Uuid) -> bool {
+            let url = format!("{}:{}/services/{}", self.base_url, self.port, id);
+            let result = self.http_client.delete(url.as_str()).send();
+            match result {
+                Ok(response) => response.status().is_success(),
+                Err(_) => false
+            }
         }
-    }
 
-    fn get_services_by_type(service_type: String) -> Option<Vec<SavedServiceRegistry>> {
-        let url = format!("http://localhost:8085/{}", service_type);
-        let response = reqwest::get(url.as_str());
-        match response {
-            Ok(mut response) =>
-                if response.status().is_success() {
-                    match response.json() {
-                        Ok(t) => Some(t),
-                        _ => None
+        pub fn get_services(&self) -> Option<Vec<SavedServiceRegistry>> {
+            let url = format!("{}:{}/services", self.base_url, self.port);
+            let response = self.http_client.get(url.as_str()).send();
+            match response {
+                Ok(mut response) =>
+                    if response.status().is_success() {
+                        match response.json() {
+                            Ok(t) => Some(t),
+                            _ => None
+                        }
+                    } else {
+                        None
                     }
-                } else {
-                    None
-                }
-            _ => None
+                _ => None
+            }
+        }
+
+        pub fn get_services_by_id(&self, id: Uuid) -> Option<SavedServiceRegistry> {
+            let url = format!("{}:{}/services/{}", self.base_url, self.port, id);
+            let response = self.http_client.get(url.as_str()).send();
+            match response {
+                Ok(mut response) =>
+                    if response.status().is_success() {
+                        match response.json() {
+                            Ok(t) => Some(t),
+                            _ => None
+                        }
+                    } else {
+                        None
+                    }
+                _ => None
+            }
+        }
+
+        pub fn get_services_by_type(&self, service_type: String) -> Option<Vec<SavedServiceRegistry>> {
+            let url = format!("{}:{}/services/{}", self.base_url, self.port, service_type);
+            let response = self.http_client.get(url.as_str()).send();
+            match response {
+                Ok(mut response) =>
+                    if response.status().is_success() {
+                        match response.json() {
+                            Ok(t) => Some(t),
+                            _ => None
+                        }
+                    } else {
+                        None
+                    }
+                _ => None
+            }
         }
     }
 }
