@@ -54,7 +54,6 @@ export default class TaskClient {
     }
 
     async DeleteTask(id: string, userId: string) {
-
         var res = await fetch(`api/tasks/${userId}/${id}`, {
             method: "DELETE"
         });
