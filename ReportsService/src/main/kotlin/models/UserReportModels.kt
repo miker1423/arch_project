@@ -11,7 +11,11 @@ data class HabitReport(
 )
 
 data class UserReport(
-    val id: String,
+    override var id: String,
     val tasks: Array<TaskReport>,
     val habits: Array<HabitReport>
-)
+): Identifiable
+
+interface Identifiable {
+    var id: String
+}
