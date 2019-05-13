@@ -7,6 +7,6 @@ import io.ktor.routing.routing
 
 fun Application.router() = routing {
     trace { println(it.buildText()) }
-    route("/admin", Route::admin)
-    route("/users", Route::users)
+    route("/reports/admin", Route::admin)
+    route("/reports/users", Route::users)
 }
