@@ -1,0 +1,18 @@
+[package]
+name = "auth_service"
+version = "0.1.0"
+authors = ["Miguel Pérez García <miguelpg_95@hotmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "0.7"
+bytes = "0.4.12"
+futures = "0.1.26"
+serde = { version = "1.0.90", features = ["derive"] }
+uuid = "0.7.4"
+sha2 = "0.8.0"
+jwt = "0.4.0"
+tokio = "0.1.18"
+rust-crypto = "0.2.36"
+base64 = "0.10.1"
+service_registry_client = { path = "../service_registry_client" }

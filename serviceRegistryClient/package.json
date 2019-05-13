@@ -1,0 +1,10 @@
+{
+  "name": "serviceregistryclient",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "npm": "^6.9.0"
+  }
+}
