@@ -1,0 +1,12 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "watch": true,
+        "outDir": "dist",
+        "lib": ["es2018"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

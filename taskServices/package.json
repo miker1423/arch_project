@@ -1,0 +1,40 @@
+{
+  "name": "taskservices",
+  "version": "1.0.0",
+  "description": "Arquitectura tasks",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha src/tests/*.ts --require ts-node/register "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miker1423/arch_project.git"
+  },
+  "author": "El señor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miker1423/arch_project/issues"
+  },
+  "homepage": "https://github.com/miker1423/arch_project#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/express": "^4.16.1",
+    "@types/mocha": "^5.2.6",
+    "@types/node-fetch": "^2.3.3",
+    "amqplib": "^0.5.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "ip": "^1.1.5",
+    "isuuid": "^0.1.0",
+    "mocha": "^6.1.4",
+    "mongoose": "^5.5.7",
+    "node-fetch": "^2.5.0",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5",
+    "uuid": "^3.3.2",
+    "webpack": "^4.30.0"
+  }
+}
