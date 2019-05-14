@@ -22,6 +22,11 @@ namespace HabitsServiceApi.Controllers
             _rabbitWrapper = rabbitWrapper;
         }
 
+        public HabitsController(IHabitsService habitsService)
+        {
+            _habitsService = habitsService;
+        }
+
         // api/habits
         [HttpGet]
         public IActionResult Get() => Ok(_habitsService.GetAllHabits());
@@ -101,6 +106,24 @@ namespace HabitsServiceApi.Controllers
                 return Ok(updatedHabit);
             }
             return BadRequest();
+        }
+
+        private IActionResult SetScoreTest(string id, bool isAddition)
+        {
+            if (Guid.TryParse(id, out Guid habitId))
+            {
+                Habit updatedHabit = _habitsService.UpdateScore(habitId, isAddition);
+                return Ok(updatedHabit);
+            }
+            return BadRequest();
+        }
+
+        // POST api/habits/
+        [HttpPost]
+        public IActionResult PostTest([FromBody] Habit habit)
+        {
+            Guid habitId = _habitsService.CreateHabit(habit);
+            return Created($"api/habits/{habitId}", habit);
         }
     }
 }
