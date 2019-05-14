@@ -7,10 +7,14 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
 import kotlinx.coroutines.runBlocking
+import models.UserReport
+import models.UserTask
 import models.UsersHabitReport
 import models.UsersTaskReport
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import persistence.UserRepository
+import java.util.*
 
 class EndpointsTests {
 
@@ -42,6 +46,18 @@ class EndpointsTests {
     fun testGetTasks() {
         runBlocking {
             val tasks = client.get<UsersTaskReport>("http://localhost:8080/reports/admin/tasks")
+            println(tasks)
+        }
+    }
+
+    @Test
+    fun testGetUserReport() {
+        val date = GregorianCalendar(2019, Calendar.FEBRUARY, 1).time
+        val task = UserTask("1", "1", "Test 1", false, date)
+        UserRepository.addTask(task)
+
+        runBlocking {
+            val tasks = client.get<UserReport>("http://localhost:8080/reports/users/1")
             println(tasks)
         }
     }

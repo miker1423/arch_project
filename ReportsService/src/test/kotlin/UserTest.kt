@@ -32,8 +32,9 @@ class UserTest {
         val task = UserTask("1", "1", "Test 1", false, Date.from(Instant.now()))
 
         UserRepository.addTask(task)
-        val tuple: MutableMap<String, String> = mutableMapOf(Pair(task.id, task.title))
-        Assertions.assertEquals(tuple, UserRepository.userReport.todayTasks)
+        val tupleExp: MutableMap<String, String> = mutableMapOf(Pair(task.id, task.title))
+        val tuple = UserRepository.userReport[task.userId]!!.todayTasks
+        Assertions.assertEquals(tupleExp, tuple)
     }
 
     @Test
@@ -43,7 +44,7 @@ class UserTest {
 
         UserRepository.addTask(task)
         val tuple: MutableMap<String, String> = mutableMapOf(Pair(task.id, task.title))
-        Assertions.assertEquals(tuple, UserRepository.userReport.delayedTask)
+        Assertions.assertEquals(tuple, UserRepository.userReport[task.userId]!!.delayedTask)
     }
 
     @Test
@@ -52,7 +53,7 @@ class UserTest {
 
         UserRepository.addHabit(habit)
         val tuple: MutableMap<String, String> = mutableMapOf(Pair(habit.id, habit.title))
-        Assertions.assertEquals(tuple, UserRepository.userReport.goodHabits)
+        Assertions.assertEquals(tuple, UserRepository.userReport[habit.userId]!!.goodHabits)
     }
 
     @Test
@@ -61,6 +62,6 @@ class UserTest {
 
         UserRepository.addHabit(habit)
         val tuple: MutableMap<String, String> = mutableMapOf(Pair(habit.id, habit.title))
-        Assertions.assertEquals(tuple, UserRepository.userReport.badHabits)
+        Assertions.assertEquals(tuple, UserRepository.userReport[habit.userId]!!.badHabits)
     }
 }
