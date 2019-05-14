@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HabitsServiceApi.Interfaces;
 using HabitsServiceApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using RabbitWrapper;
 
 namespace HabitsServiceApi.Controllers
 {
@@ -14,10 +15,13 @@ namespace HabitsServiceApi.Controllers
     public class HabitsController : Controller
     {
         private IHabitsService _habitsService;
-        public HabitsController(IHabitsService habitsService)
+        private Wrapper _rabbitWrapper;
+        public HabitsController(IHabitsService habitsService, Wrapper rabbitWrapper)
         {
             _habitsService = habitsService;
+            _rabbitWrapper = rabbitWrapper;
         }
+
         // api/habits
         [HttpGet]
         public IActionResult Get() => Ok(_habitsService.GetAllHabits());
@@ -53,6 +57,7 @@ namespace HabitsServiceApi.Controllers
         public IActionResult Post([FromBody] Habit habit)
         {
             Guid habitId =_habitsService.CreateHabit(habit);
+            _rabbitWrapper.SendHabit(habit.Id, (float)habit.Score, habitId, habit.Title);
             return Created($"api/habits/{habitId}", habit);
         }
 
@@ -67,27 +72,12 @@ namespace HabitsServiceApi.Controllers
 
         // PUT api/habits/score/add
         [HttpPut("score/add/{id}")]
-        public IActionResult AddScore(string id)
-        {
-            if (Guid.TryParse(id, out Guid habitId))
-            {
-                Habit updatedHabit = _habitsService.UpdateScore(habitId, true);
-                return Ok(updatedHabit);
-            }
-            return BadRequest();
-        }
+        public IActionResult AddScore(string id) => SetScore(id, true);
 
         // PUT api/habits/score/substract
         [HttpPut("score/substract/{id}")]
-        public IActionResult SubstractScore(string id)
-        {
-            if (Guid.TryParse(id, out Guid habitId))
-            {
-                Habit updatedHabit = _habitsService.UpdateScore(habitId, false);
-                return Ok(updatedHabit);
-            }
-            return BadRequest();
-        }
+        public IActionResult SubstractScore(string id) => SetScore(id, false);
+
 
         // DELETE api/habits/{habitId}
         [HttpDelete("{id}")]
@@ -99,6 +89,17 @@ namespace HabitsServiceApi.Controllers
                 return Ok(deletedHabit);
             }
 
+            return BadRequest();
+        }
+
+        private IActionResult SetScore(string id, bool isAddition)
+        {
+            if (Guid.TryParse(id, out Guid habitId))
+            {
+                Habit updatedHabit = _habitsService.UpdateScore(habitId, isAddition);
+                _rabbitWrapper.SendHabit(updatedHabit.UserId, (float)updatedHabit.Score, updatedHabit.Id, updatedHabit.Title);
+                return Ok(updatedHabit);
+            }
             return BadRequest();
         }
     }

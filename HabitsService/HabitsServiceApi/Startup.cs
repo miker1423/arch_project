@@ -22,6 +22,7 @@ namespace HabitsServiceApi
     public class Startup
     {
         private IHostingEnvironment env;
+        
         public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             env = hostingEnvironment;
@@ -33,11 +34,14 @@ namespace HabitsServiceApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var rabbitWrapper = new RabbitWrapper.Wrapper(Configuration.GetConnectionString("RABBIT_URL"));
+            rabbitWrapper.Start();
             var DB_URL = Configuration.GetConnectionString("DB_URL");
             var DB_PORT = Configuration.GetConnectionString("DB_PORT");
             var DB_USER = Configuration.GetConnectionString("DB_USER");
             var DB_PASSWORD = Configuration.GetConnectionString("DB_PASSWORD");
 
+            services.AddSingleton(rabbitWrapper);
             services.AddHostedService<PresenceService>();
             services.AddScoped<IHabitsService, HabitsService>();
             services.AddDbContext<HabitsContext>(options =>

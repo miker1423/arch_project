@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\RabbitWrapper\RabbitWrapper.csproj" />
     <ProjectReference Include="..\ServiceRegistry.Client\ServiceRegistry.Client.csproj" />
   </ItemGroup>
 
