@@ -19,26 +19,26 @@ pub fn create_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) ->
 pub fn update_user((req, user): (HttpRequest<Arc<AppState>>, Json<UserMinimal>)) -> impl Responder {
     let state: &AppState = req.state();
     let result = state.update_user(&mut user.clone());
-    return match result {
+    match result {
         Some(user) => HttpResponse::Ok().json(user),
         _ => HttpResponse::BadRequest().finish()
-    };
+    }
 }
 
 pub fn find_user((req, user): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
     let state: &AppState = req.state();
-    return match state.find_user(user.as_str()) {
+    match state.find_user(user.as_str()) {
         Some(user) => HttpResponse::Ok().json(UserMinimal::from(user)),
         None => HttpResponse::BadRequest().finish()
-    };
+    }
 }
 
 pub fn delete_user((req, username): (HttpRequest<Arc<AppState>>, Path<String>)) -> impl Responder {
     let state: &AppState = req.state();
-    return match state.remove_user(username.into_inner()) {
+    match state.remove_user(username.into_inner()) {
         Some(user) => HttpResponse::Ok().json(UserMinimal::from(user)),
         None => HttpResponse::BadRequest().finish()
-    };
+    }
 }
 
 pub fn login((req, user): (HttpRequest<Arc<AppState>>, Json<UserView>)) -> impl Responder {
