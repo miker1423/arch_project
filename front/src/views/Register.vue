@@ -28,6 +28,7 @@ type Result = {
     password: string
 };
 
+@Component
 export default class RegisterComponent extends Vue{
   authenticationClient: AuthenticationClient = new AuthenticationClient()
 

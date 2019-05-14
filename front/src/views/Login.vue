@@ -18,6 +18,7 @@
 import Vue from 'vue';
 import AuthenticationClient from '../clients/AuthenticationClient';
 import { Component, Prop } from 'vue-property-decorator';
+import router from '../router';
 
 @Component
 export default class LoginComponent extends Vue{
@@ -35,13 +36,16 @@ export default class LoginComponent extends Vue{
   async onLoginClick(){    
     console.log("Hi")
     let user: UserVM = {
-      id: "",
-      email: "",
+      id: "0000001",
+      email: "cesar@i.com",
       username: this.username,
       password: this.password,
     }
 
+    window.localStorage.setItem("login", JSON.stringify(user))
+
     let authUser = await this.authenticationClient.loginUser(user)
+    router.push('/maindashboard')
   }
 }
 </script>

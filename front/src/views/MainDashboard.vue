@@ -1,19 +1,30 @@
 <template>
-  <div class="main-dashboard">
-    <h2>Welcome, username</h2>
-
-    <button class="home-button"><router-link to="/">Home</router-link></button>
+  <div>
+    <div class="main-dashboard">
+      <h2>Welcome, {{ username }}</h2>
+      <button class="home-button"><router-link to="/">Home</router-link></button>
+  </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Prop } from 'vue-property-decorator';
+import { Prop, Component, Watch } from 'vue-property-decorator';
+import TasksClient from '../clients/TasksClient';
 
+@Component
 export default class MainDashboard extends Vue {
 
-  // @Prop() username: string
-  
+    private username: string = ""
+    private id: string = ""
+
+    constructor() {
+      super()
+      let json = window.localStorage.getItem("login")
+      let user = JSON.parse(json!) as UserVM
+      this.username = user.username
+      this.id = user.id
+    }
 }
 </script>
 

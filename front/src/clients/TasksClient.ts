@@ -1,4 +1,4 @@
-export default class TaskClient {
+export default class TasksClient {
 
     async GetTasks(userId: string){
         // Receives Array of Tasks
