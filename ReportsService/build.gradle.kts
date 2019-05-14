@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.contracts.model.structure.UNKNOWN_COMPUTATION.type
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -22,6 +21,10 @@ dependencies {
     compile("io.ktor:ktor-server-netty:1.1.4")
     compile("org.litote.kmongo:kmongo-coroutine:3.10.1")
     compile("io.ktor:ktor-jackson:1.1.4")
+    compile("com.rabbitmq:amqp-client:5.6.0")
+    compile("io.ktor:ktor-client-apache:1.1.4")
+    compile("io.ktor:ktor-client-jackson:1.1.4")
+    compile("io.ktor:ktor-client-json:1.1.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
 }
 
