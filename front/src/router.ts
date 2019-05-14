@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import MainDashboard from './views/MainDashboard.vue';
+import Reports from './views/Reports.vue';
 
 Vue.use(Router);
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/maindashboard',
       name: 'maindashboard',
       component: MainDashboard,
+    },
+    {
+      path: '/reports',
+      name: 'reports',
+      component: Reports,
     },
   ],
 });
