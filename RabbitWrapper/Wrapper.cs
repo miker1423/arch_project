@@ -10,7 +10,7 @@ namespace RabbitWrapper
         private readonly string _rabbitUrl;
         private IModel _connection;
         private const string RoutingKey = "";
-        private const string Exchange = "messages";
+        private const string Exchange = "message";
         public Wrapper(string url) => _rabbitUrl = url;
 
         public void Start()
@@ -21,15 +21,15 @@ namespace RabbitWrapper
             _connection = connection.CreateModel();
         }
 
-        public void SendHabit(Guid userId, float score, int difficulty, string title)
+        public void SendHabit(Guid userId, double score, Guid entityId, string title)
         {
             var message = new Message
             {
                 Entity = EntityType.Habit,
-                Difficulty = difficulty,
+                EntityId = entityId,
                 Score = score,
                 UserId = userId,
-                Title = title
+                Title = title,
             };
             var serialized = SerializeObject(message);
             _connection.BasicPublish(Exchange, RoutingKey, false, null, serialized);
