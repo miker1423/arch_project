@@ -1,5 +1,7 @@
 interface UserReportVM {
     id:	string,
-    tasks: TaskReportVM,
-    habit: HabitReport
+    todayTasks: Map<string, string>
+    delayedTask: Map<string, string>
+    goodHabits: Map<string, string>
+    badHabits: Map<string, string>
 }
