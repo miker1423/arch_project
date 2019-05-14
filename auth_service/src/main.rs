@@ -15,11 +15,11 @@ use service_registry_client::service_registry_client::{
 use uuid::Uuid;
 
 fn main() {
-    let address = "127.0.0.1:8000";
+    let address = "0.0.0.0:8000";
 
     let service = ServiceDefinition {
         service_type: "auth_service".into(),
-        ip_address: "127.0.0.1".into(),
+        ip_address: "0.0.0.0".into(),
         port: 8000,
         api_version: "1".into()
     };
