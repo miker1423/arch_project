@@ -10,7 +10,7 @@ namespace RabbitWrapper
         private readonly string _rabbitUrl;
         private IModel _connection;
         private const string RoutingKey = "";
-        private const string Exchange = "messages";
+        private const string Exchange = "message";
         public Wrapper(string url) => _rabbitUrl = url;
 
         public void Start()
