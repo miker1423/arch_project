@@ -34,12 +34,12 @@ namespace HabitsServiceApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var rabbitWrapper = new RabbitWrapper.Wrapper(Configuration.GetConnectionString("RABBIT_URL"));
+            var rabbitWrapper = new RabbitWrapper.Wrapper("amqp://services:services@192.168.137.1:5672/");
             rabbitWrapper.Start();
-            var DB_URL = Configuration.GetConnectionString("DB_URL");
-            var DB_PORT = Configuration.GetConnectionString("DB_PORT");
-            var DB_USER = Configuration.GetConnectionString("DB_USER");
-            var DB_PASSWORD = Configuration.GetConnectionString("DB_PASSWORD");
+            var DB_URL = "database-1.cxens1qv0ud6.us-east-1.rds.amazonaws.com";
+            var DB_PORT = "5432";
+            var DB_USER = "rosa";
+            var DB_PASSWORD = "rosa2019";
 
             services.AddSingleton(rabbitWrapper);
             services.AddHostedService<PresenceService>();
@@ -52,7 +52,8 @@ namespace HabitsServiceApi
                 }
                 else
                 {
-                    options.UseNpgsql($"{DB_USER}:{DB_PASSWORD}@{DB_URL}:{DB_PORT}");
+                    string connection = $"Host={DB_URL};Username={DB_USER};Password={DB_PASSWORD};Database=postgres";
+                    options.UseNpgsql(connection);
                 }
             });
 
