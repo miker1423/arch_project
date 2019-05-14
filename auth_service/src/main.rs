@@ -1,4 +1,4 @@
-mod state;
+pub mod state;
 mod db_worker;
 mod handlers;
 mod models;
@@ -71,4 +71,83 @@ fn main() {
             _ => "Failed to parse id"
         };
     println!("{}", message);
+}
+
+
+
+
+#[cfg(test)]
+mod test {
+    use crate::state::*;
+    use crate::models::user::*;
+    #[test]
+    fn test_add(){
+        let app_state = AppState::load_from_file("");
+        let user = User {
+            email: "test_user".into(),
+            id: "some_id".into(),
+            password_hash: "some_hash".into(),
+            username: "some_username".into()
+        };
+        app_state.add_user(user);
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 1);
+    }
+
+    #[test]
+    fn test_remove_user() {
+        let app_state = AppState::load_from_file("");
+        let user = User {
+            email: "test_user".into(),
+            id: "some_id".into(),
+            password_hash: "some_hash".into(),
+            username: "some_username".into()
+        };
+        app_state.add_user(user);
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 1);
+
+        let _ = app_state.remove_user("some_username".into());
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 0);
+    }
+
+    #[test]
+    fn test_find_user() {
+        let app_state = AppState::load_from_file("");
+        let user = User {
+            email: "test_user".into(),
+            id: "some_id".into(),
+            password_hash: "some_hash".into(),
+            username: "some_username".into()
+        };
+        app_state.add_user(user);
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 1);
+
+        if let Some(_) = app_state.find_user("some_username") {
+            assert!(true);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn test_find_username() {        
+        let app_state = AppState::load_from_file("");
+        let user = User {
+            email: "test_user".into(),
+            id: "some_id".into(),
+            password_hash: "some_hash".into(),
+            username: "some_username".into()
+        };
+        app_state.add_user(user);
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 1);
+
+        let result = app_state.find_username("test_user");
+        if let Some(email) = result {
+            assert_eq!(email, "test_user");
+        }
+    }
 }
