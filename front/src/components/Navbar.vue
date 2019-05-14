@@ -2,33 +2,37 @@
     <div class="topnav">
         <div class="sidebar" style="display:none" id="sidebar">
             <button id="sidemenu-options"><router-link to="/maindashboard">Dashboard</router-link></button>
-            <button id="sidemenu-options"><router-link to="/">Tasks</router-link></button>
-            <button id="sidemenu-options"><router-link to="/">Habits</router-link></button>
+            <button id="sidemenu-options"><router-link to="/tasks">Tasks</router-link></button>
+            <button id="sidemenu-options"><router-link to="/habits">Habits</router-link></button>
             <button id="sidemenu-options"><router-link to="/reports">Reports</router-link></button>
             <button id="sidemenu-options"><router-link to="/">Logout</router-link></button>
         </div>
         <div id="main-navbar">
-            <button v-on:click="openSidebar" class="active" id="sidebar-button">Home</button>
+            <button class="active" id="sidebar-button">Home</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+//import Vue from 'vue';
 
-export default class NavbarComponent extends Vue{
+import { Vue } from 'vue-property-decorator';
+
+export default class NavbarComponent extends Vue{}
+
+/*export default class NavbarComponent extends Vue{
     openSidebar(){       
-        if(!document.getElementById("sidebar").classList.contains('open')){
-            document.getElementById("sidebar").classList.toggle('open');
-            document.getElementById("sidebar").style.display = "block";
-            document.getElementById("main-navbar").classList.add('open');
-        } else if(document.getElementById("sidebar").classList.contains('open')) {
-            document.getElementById("sidebar").classList.toggle('open');
-            document.getElementById("main-navbar").classList.remove("open");
-            document.getElementById("sidebar").style.display = "none";     
+        if(!document.getElementById("sidebar")!.classList.contains('open')){
+            document.getElementById("sidebar")!.classList.toggle('open');
+            document.getElementById("sidebar")!.style.display = "block";
+            document.getElementById("main-navbar")!.classList.add('open');
+        } else if(document.getElementById("sidebar")!.classList.contains('open')) {
+            document.getElementById("sidebar")!.classList.toggle('open');
+            document.getElementById("main-navbar")!.classList.remove("open");
+            document.getElementById("sidebar")!.style.display = "none";     
         }    
     }
-}
+}*/
 
 </script>
 
@@ -74,6 +78,7 @@ div.topnav div#main-navbar button {
   background-color: #2c3e50;
   border: none;
   outline: none;
+  cursor: pointer;
   color: #f2f2f2;
   text-align: center;
   padding: 14px 16px;

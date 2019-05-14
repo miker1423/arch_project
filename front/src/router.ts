@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
+import Tasks from './views/Tasks.vue';
+import Habits from './views/Habits.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import MainDashboard from './views/MainDashboard.vue';
@@ -36,6 +38,16 @@ export default new Router({
       path: '/reports',
       name: 'reports',
       component: Reports,
+    },
+    {
+      path: '/tasks',
+      name: 'tasks',
+      component: Tasks,
+    },
+    {
+      path: '/habits',
+      name: 'habits',
+      component: Habits,
     },
   ],
 });

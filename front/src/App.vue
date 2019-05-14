@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <navbar/>
+      <NavbarComponent/>
       <!--<router-link to="/">Home</router-link>-->
     </div>
     <router-view/>
@@ -9,14 +9,21 @@
 </template>
 
 <script lang="ts">
+//import Vue from 'vue';
+//import Component from 'vue-class-component';
 import { Component, Vue } from 'vue-property-decorator';
-import navbar from '@/components/nav-menu/navbar.vue'; // @ is an alias to /src
+//import Navbar from './components/Navbar.vue';
+import NavbarComponent from '@/components/Navbar.vue';
+//import Component from 'vue-class-component';
+
 @Component({
   components: {
-    navbar,
+    NavbarComponent,
   },
 })
-export default class App extends Vue {}
+
+export default class App extends Vue{}
+
 </script>
 
 <style lang="scss">
