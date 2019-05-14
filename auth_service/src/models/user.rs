@@ -4,7 +4,7 @@ use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::Display;
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Deserialize, Serialize, Clone, Default)]
 pub struct User {
     pub username: String,
     pub email: String,
@@ -15,10 +15,8 @@ pub struct User {
 impl User {
     pub fn new() -> User {
         User {
-            username: String::new(),
-            email: String::new(),
             id: Uuid::new_v4().to_string(),
-            password_hash: String::new()
+            ..Default::default()
         }
     }
 

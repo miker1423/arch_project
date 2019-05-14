@@ -19,10 +19,10 @@ pub fn start_new(state: Arc<AppState>) {
                     dbg!(user);
                     let serialized: String = String::from(user);
                     let result = file.write(serialized.as_bytes());
-                    if let Err(_) = result { }
+                    if result.is_err() { }
                 }
                 let result = file.flush();
-                if let Err(_) = result { }
+                if result.is_err() { }
             }
             state.finish_write();
             Ok(())

@@ -81,7 +81,7 @@ impl Db for AppState {
             }
         }
 
-        return None;
+        None
     }
 
     fn add_user(&self, user: User) {
@@ -92,20 +92,20 @@ impl Db for AppState {
     }
 
     fn remove_user(&self, user_id: String) -> Option<User> {
-        return match self.users.write() {
+        match self.users.write() {
             Ok(mut table) => table.remove(&user_id).and_then(|u| {
                 self.mark_modified();
                 Some(u)
             }),
             _ => None
-        };
+        }
     }
 
     fn find_username(&self, email: &str) -> Option<String> {
-        return match self.users.read().unwrap().get(email) {
+        match self.users.read().unwrap().get(email) {
             Some(user) => Some(user.username.clone()),
             None => None
-        };
+        }
     }
 
     fn find_user(&self, username: &str) -> Option<User> {

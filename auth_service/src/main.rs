@@ -1,4 +1,4 @@
-mod state;
+pub mod state;
 mod db_worker;
 mod handlers;
 mod models;
@@ -15,11 +15,11 @@ use service_registry_client::service_registry_client::{
 use uuid::Uuid;
 
 fn main() {
-    let address = "127.0.0.1:8000";
+    let address = "0.0.0.0:8000";
 
     let service = ServiceDefinition {
         service_type: "auth_service".into(),
-        ip_address: "127.0.0.1".into(),
+        ip_address: "0.0.0.0".into(),
         port: 8000,
         api_version: "1".into()
     };
@@ -71,4 +71,60 @@ fn main() {
             _ => "Failed to parse id"
         };
     println!("{}", message);
+}
+
+
+
+
+#[cfg(test)]
+mod test {
+    use crate::state::*;
+    use crate::models::user::*;
+    #[test]
+    fn test_add(){
+        let app_state = get_state_with_user();
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 1);
+    }
+
+    #[test]
+    fn test_remove_user() {
+        let app_state = get_state_with_user();
+
+        let _ = app_state.remove_user("some_username".into());
+        let users_length = app_state.users.read().unwrap().len();
+        assert_eq!(users_length, 0);
+    }
+
+    #[test]
+    fn test_find_user() {
+        let app_state = get_state_with_user();
+
+        if let Some(_) = app_state.find_user("some_username") {
+            assert!(true);
+        } else {
+            assert!(false);
+        }
+    }
+
+    #[test]
+    fn test_find_username() { 
+        let app_state = get_state_with_user();
+        let result = app_state.find_username("test_user");
+        if let Some(email) = result {
+            assert_eq!(email, "test_user");
+        }
+    }
+
+    fn get_state_with_user() -> AppState {       
+        let app_state = AppState::load_from_file("");
+        let user = User {
+            email: "test_user".into(),
+            id: "some_id".into(),
+            password_hash: "some_hash".into(),
+            username: "some_username".into()
+        };
+        app_state.add_user(user);
+        app_state
+    }
 }
