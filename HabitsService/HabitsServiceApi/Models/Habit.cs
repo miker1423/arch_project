@@ -17,7 +17,7 @@ namespace HabitsServiceApi.Models
 
         private static Habit _emptyHabit = new Habit();
 
-        public Habit(int difficulty, int type, double score, string description, string title, Guid id)
+        public Habit(int difficulty, int type, double score, string description, string title, Guid id, Guid userId)
         {
             Difficulty = (HabitDifficulties) difficulty;
             Type = (HabitTypes) type;
@@ -25,6 +25,7 @@ namespace HabitsServiceApi.Models
             Description = description;
             Title = title;
             Id = id;
+            UserId = userId;
         }
 
         public Habit()
