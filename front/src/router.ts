@@ -3,6 +3,8 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import MainDashboard from './views/MainDashboard.vue'
+import Tasks from './views/Tasks.vue';
+import Habits from './views/Habits.vue';
 
 Vue.use(Router);
 
@@ -24,6 +26,16 @@ export default new Router({
       path: '/maindashboard',
       name: 'maindashboard',
       component: MainDashboard,
+    },
+    {
+      path: '/tasks',
+      name: 'tasks',
+      component: Tasks,
+    },
+    {
+      path: '/habits',
+      name: 'habits',
+      component: Habits,
     }
   ],
 });
