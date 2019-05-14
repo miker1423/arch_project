@@ -14,11 +14,9 @@
 </template>
 
 <script lang="ts">
-//import Vue from 'vue';
-
 import { Vue } from 'vue-property-decorator';
 
-export default class NavbarComponent extends Vue{}
+export default class Navbar extends Vue{}
 
 /*export default class NavbarComponent extends Vue{
     openSidebar(){       

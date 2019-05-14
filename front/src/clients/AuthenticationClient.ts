@@ -1,6 +1,6 @@
 export default class AuthenticationClients {
 
-    baseAddress: string;
+    baseAddress: string = "";
     AuthenticationClients(baseAddress: string){
         this.baseAddress = baseAddress;
     }
@@ -44,7 +44,7 @@ export default class AuthenticationClients {
         return null;        
     }
 
-    async loginUser(user: UserVM){
+    async loginUser(user: UserVM): Promise<UserVM | null>{
         var newUser = {
             id: "",
             username: user.username,

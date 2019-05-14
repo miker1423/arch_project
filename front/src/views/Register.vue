@@ -1,13 +1,13 @@
 <template>
   <div class="register">
       <p>Username</p>
-      <input class="username" placeholder="Username"></input>
+      <input class="username" placeholder="Username"/>
 
       <p>Email</p>
-      <input class="email" placeholder="Email"></input>
+      <input class="email" placeholder="Email"/>
 
       <p>Password</p>
-      <input type="password" class="password" placeholder="Password"></input>
+      <input type="password" class="password" placeholder="Password"/>
       <br>
         
       <div class="buttons">

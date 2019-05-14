@@ -6,6 +6,18 @@
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue';
+import { Prop } from 'vue-property-decorator';
+
+export default class MainDashboard extends Vue {
+
+  // @Prop() username: string
+  
+}
+</script>
+
+
 <style scoped lang="scss">
 div.main-dashboard h2 {
     font-family: sans-serif;

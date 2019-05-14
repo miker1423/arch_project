@@ -1,15 +1,15 @@
 <template>
   <div class="login">
     <p>Username</p>
-    <input class="username" id="username" placeholder="Username"/>
+    <input class="username" id="username" placeholder="Username" v-model="username"/>
 
     <p>Password</p>
-    <input type="password" class="password" placeholder="Password"/>
+    <input type="password" class="password" placeholder="Password" v-model="password"/>
     <br>
 
     <div class="buttons">
       <button class="cancel-button"><router-link to="/">Cancel</router-link></button>
-      <button class="login-button" >Login</button>
+      <button class="login-button" @click="onLoginClick">Login</button>
     </div>  
   </div>
 </template>
@@ -17,52 +17,36 @@
 <script lang="ts">
 import Vue from 'vue';
 import AuthenticationClient from '../clients/AuthenticationClient';
+import { Component, Prop } from 'vue-property-decorator';
 
-type Result = {
-    id: "",
-    username: string,
-    password: string
-};
-
+@Component
 export default class LoginComponent extends Vue{
-  authenticationClient: AuthenticationClient = new AuthenticationClient()
 
-  //@Prop() loginUsers?: boolean
+  constructor() {
+    super()
+    this.onLoginClick = this.onLoginClick.bind(this);
+  }
 
-  onLoginClick(){
-    
-    /*if (this.$props.loginUsers){
-      let promise = this.authenticationClient.loginUser(input)
-        .then(results => {
-        this.addToResults(results, 3)
-      });
-    }*/
+  private username: string = ""
+  private password: string = ""
+  private authenticationClient: AuthenticationClient = new AuthenticationClient()
+  
 
-    console.log("click");
+  async onLoginClick(){    
+    console.log("Hi")
+    let user: UserVM = {
+      id: "",
+      email: "",
+      username: this.username,
+      password: this.password,
+    }
+
+    let authUser = await this.authenticationClient.loginUser(user)
   }
 }
 </script>
 
-<!--<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import Vue from 'vue';
-import AuthenticationClient from '../clients/AuthenticationClient';
 
-export default class LoginComponent extends Vue{
-    authenticationClient: AuthenticationClient = new AuthenticationClient()
-    
-    /*@Prop() username?: string
-    @Prop() password?: string*/
-
-    login(){  
-      let user = (<HTMLInputElement> document.getElementById("username")).value;
-      console.log("user: " + user);
-        // llamar al cliente
-        // info lista   
-    }
-}
-
-</script>-->
 
 <style scoped lang="scss">
   div.login {
@@ -75,12 +59,14 @@ export default class LoginComponent extends Vue{
     text-align: left;
     color: #163a61;
     font-size: 20px;
+    font-family: sans-serif;
   }
 
   div.login input {
     border: none;
     width: 200px;
     border-bottom: 1px solid #163a61;
+    font-family: sans-serif;
   }
 
   div.login div.buttons {
