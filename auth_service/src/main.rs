@@ -82,30 +82,14 @@ mod test {
     use crate::models::user::*;
     #[test]
     fn test_add(){
-        let app_state = AppState::load_from_file("");
-        let user = User {
-            email: "test_user".into(),
-            id: "some_id".into(),
-            password_hash: "some_hash".into(),
-            username: "some_username".into()
-        };
-        app_state.add_user(user);
+        let app_state = get_state_with_user();
         let users_length = app_state.users.read().unwrap().len();
         assert_eq!(users_length, 1);
     }
 
     #[test]
     fn test_remove_user() {
-        let app_state = AppState::load_from_file("");
-        let user = User {
-            email: "test_user".into(),
-            id: "some_id".into(),
-            password_hash: "some_hash".into(),
-            username: "some_username".into()
-        };
-        app_state.add_user(user);
-        let users_length = app_state.users.read().unwrap().len();
-        assert_eq!(users_length, 1);
+        let app_state = get_state_with_user();
 
         let _ = app_state.remove_user("some_username".into());
         let users_length = app_state.users.read().unwrap().len();
@@ -114,16 +98,7 @@ mod test {
 
     #[test]
     fn test_find_user() {
-        let app_state = AppState::load_from_file("");
-        let user = User {
-            email: "test_user".into(),
-            id: "some_id".into(),
-            password_hash: "some_hash".into(),
-            username: "some_username".into()
-        };
-        app_state.add_user(user);
-        let users_length = app_state.users.read().unwrap().len();
-        assert_eq!(users_length, 1);
+        let app_state = get_state_with_user();
 
         if let Some(_) = app_state.find_user("some_username") {
             assert!(true);
@@ -133,7 +108,15 @@ mod test {
     }
 
     #[test]
-    fn test_find_username() {        
+    fn test_find_username() { 
+        let app_state = get_state_with_user();
+        let result = app_state.find_username("test_user");
+        if let Some(email) = result {
+            assert_eq!(email, "test_user");
+        }
+    }
+
+    fn get_state_with_user() -> AppState {       
         let app_state = AppState::load_from_file("");
         let user = User {
             email: "test_user".into(),
@@ -142,12 +125,6 @@ mod test {
             username: "some_username".into()
         };
         app_state.add_user(user);
-        let users_length = app_state.users.read().unwrap().len();
-        assert_eq!(users_length, 1);
-
-        let result = app_state.find_username("test_user");
-        if let Some(email) = result {
-            assert_eq!(email, "test_user");
-        }
+        app_state
     }
 }
