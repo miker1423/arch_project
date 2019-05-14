@@ -11,7 +11,6 @@ object HabitRepository {
     var habitsReport = UsersHabitReport()
 
     fun addHabit(habit: UserHabit){
-        val contains = allHabits.containsKey(habit.id)
         allHabits[habit.id] = habit
         checkBestHabit(habit)
         checkWorstHabit(habit)

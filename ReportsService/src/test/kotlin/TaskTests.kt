@@ -10,7 +10,7 @@ class TaskTests {
     @Test
     fun testAddTask(){
         val date = GregorianCalendar(2019, Calendar.JUNE, 1).time
-        val task = UserTask("1", false, date)
+        val task = UserTask("1", "1", "Test 1", false, date)
 
         TaskRepository.addTask(task)
         assert(TaskRepository.allTasks.isNotEmpty())
@@ -19,7 +19,7 @@ class TaskTests {
     @Test
     fun testAddCorrectTask(){
         val date = GregorianCalendar(2019, Calendar.JUNE, 1).time
-        val task = UserTask("1", false, date)
+        val task = UserTask("1", "1", "Test 1", false, date)
 
         TaskRepository.addTask(task)
         assert(TaskRepository.allTasks.contains(task.id))
@@ -27,7 +27,7 @@ class TaskTests {
 
     @Test
     fun testCheckTodayTask(){
-        val task = UserTask("1", false, Date.from(Instant.now()))
+        val task = UserTask("1", "1", "Test 1", false, Date.from(Instant.now()))
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(1, TaskRepository.tasksReport.availableTodayTask)
@@ -35,7 +35,7 @@ class TaskTests {
 
     @Test
     fun testCheckTodayTasksButCompleted(){
-        val task = UserTask("1", true, Date.from(Instant.now()))
+        val task = UserTask("1", "1", "Test 1", true, Date.from(Instant.now()))
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(0, TaskRepository.tasksReport.availableTodayTask)
@@ -44,7 +44,7 @@ class TaskTests {
     @Test
     fun testCheckDelayedTask(){
         val date = GregorianCalendar(2019, Calendar.FEBRUARY, 1).time
-        val task = UserTask("1", false, date)
+        val task = UserTask("1", "1", "Test 1", false, date)
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(1, TaskRepository.tasksReport.delayedTask)
@@ -53,7 +53,7 @@ class TaskTests {
     @Test
     fun testCheckAvailableTask(){
         val date = GregorianCalendar(2019, Calendar.JUNE, 1).time
-        val task = UserTask("1", false, date)
+        val task = UserTask("1", "1", "Test 1", false, date)
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(1, TaskRepository.tasksReport.availableTask)
@@ -63,7 +63,7 @@ class TaskTests {
     fun testCheckCompletedTasksBeforeDueDate(){
         val date = GregorianCalendar(2019, Calendar.JUNE, 1).time
         val completionDate = GregorianCalendar(2019, Calendar.MAY, 1).time
-        val task = UserTask("1", true, date, completionDate)
+        val task = UserTask("1", "1", "Test 1", true, date, completionDate)
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(1, TaskRepository.tasksReport.completedBeforeDue)
@@ -73,7 +73,7 @@ class TaskTests {
     fun testCheckCompletedTasksAfterDueDate(){
         val date = GregorianCalendar(2019, Calendar.MAY, 1).time
         val completionDate = GregorianCalendar(2019, Calendar.JUNE, 1).time
-        val task = UserTask("1", true, date, completionDate)
+        val task = UserTask("1", "1", "Test 1", true, date, completionDate)
 
         TaskRepository.addTask(task)
         Assertions.assertEquals(1, TaskRepository.tasksReport.completedAfterDue)

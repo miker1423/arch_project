@@ -9,4 +9,5 @@ fun Application.router() = routing {
     trace { println(it.buildText()) }
     route("/reports/admin", Route::admin)
     route("/reports/users", Route::users)
+    route("/health", Route::check)
 }

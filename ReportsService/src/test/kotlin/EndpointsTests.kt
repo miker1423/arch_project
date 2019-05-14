@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.Application
 import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JacksonSerializer
@@ -8,7 +7,6 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
 import kotlinx.coroutines.runBlocking
-import models.HabitReport
 import models.UsersHabitReport
 import models.UsersTaskReport
 import org.junit.jupiter.api.BeforeAll

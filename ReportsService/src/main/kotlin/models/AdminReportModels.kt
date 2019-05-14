@@ -12,18 +12,21 @@ data class HabitsPerRange(
 )
 
 data class UserHabit(
-    val id: String,
+    override var id: String,
+    override var userId: String,
     val title: String,
     val score: Int,
-    val userId: String
-)
+    val type: Int
+): IdentifiableEntity
 
 data class UserTask(
-    val id: String,
+    override var id: String,
+    override var userId: String,
+    val title: String,
     val complete: Boolean,
     val dueDate: Date,
     val completionDate: Date? = null
-)
+): IdentifiableEntity
 
 data class UsersHabitReport (
     var habitsPerRange: HabitsPerRange = HabitsPerRange(),
@@ -38,3 +41,22 @@ data class UsersTaskReport(
     val availableTask: Int = 0,
     val availableTodayTask: Int = 0
 )
+
+data class User(
+    var id: String = "",
+    val tasks: MutableMap<String, UserTask> = mutableMapOf<String, UserTask>(),
+    val habits: MutableMap<String, UserHabit> = mutableMapOf<String, UserHabit>()
+)
+
+data class UserReport(
+    var id: String = "",
+    var todayTasks: MutableMap<String, String> = mutableMapOf(),
+    var delayedTask: MutableMap<String, String> = mutableMapOf(),
+    var goodHabits: MutableMap<String, String> = mutableMapOf(),
+    var badHabits: MutableMap<String, String> = mutableMapOf()
+)
+
+interface IdentifiableEntity {
+    var id: String
+    var userId: String
+}

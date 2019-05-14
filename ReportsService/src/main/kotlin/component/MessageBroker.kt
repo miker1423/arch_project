@@ -12,6 +12,7 @@ import models.UserHabit
 import models.UserTask
 import persistence.HabitRepository
 import persistence.TaskRepository
+import persistence.UserRepository
 import java.time.Instant
 import java.util.*
 
@@ -33,19 +34,23 @@ class MessageBroker {
 
     private fun consumeHabits(msg: Message?) {
         msg?.let {
-            val habit = UserHabit(msg.EntityId, msg.Title, msg.Score, msg.UserId)
+            val habit = UserHabit(msg.EntityId, msg.UserId, msg.Title, msg.Score, msg.HabitType)
             HabitRepository.addHabit(habit)
+            UserRepository.addHabit(habit)
         }
     }
 
     private fun consumeTasks(msg: Message?) {
         msg?.let {
             val task = UserTask(
+                msg.EntityId,
                 msg.UserId,
+                msg.Title,
                 msg.Completed,
                 Date.from(Instant.ofEpochSecond(msg.DueDate))
             )
             TaskRepository.addTask(task)
+            UserRepository.addTask(task)
         }
     }
 

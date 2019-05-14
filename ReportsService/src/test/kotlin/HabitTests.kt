@@ -7,7 +7,7 @@ class HabitTests {
 
     @Test
     fun testAddHabit(){
-        val habit = UserHabit("1","Test", 67, "cesar")
+        val habit = UserHabit("1","1", "Test", 67, 1)
 
         HabitRepository.addHabit(habit)
         assert(HabitRepository.allHabits.isNotEmpty())
@@ -15,7 +15,7 @@ class HabitTests {
 
     @Test
     fun testAddCorrectHabit(){
-        val habit = UserHabit("1","Test", 67, "cesar")
+        val habit = UserHabit("1","1", "Test", 67, 1)
 
         HabitRepository.addHabit(habit)
         assert(HabitRepository.allHabits.contains(habit.id))
@@ -23,7 +23,7 @@ class HabitTests {
 
     @Test
     fun testCheckBestHabitWithOne() {
-        val habit = UserHabit("1","Test", 67, "cesar")
+        val habit = UserHabit("1","1", "Test", 67, 1)
 
         HabitRepository.addHabit(habit)
         assert(HabitRepository.habitsReport.bestHabit!! == habit)
@@ -31,9 +31,9 @@ class HabitTests {
 
     @Test
     fun testCheckBestHabitWithMany() {
-        val habit1 = UserHabit("1","Test", 67, "cesar")
-        val habit2 = UserHabit("2","Test", 70, "miguel")
-        val habit3 = UserHabit("3","Test", 30, "chris")
+        val habit1 = UserHabit("1","1", "Test", 67, 1)
+        val habit2 = UserHabit("2","2", "Test 2", 70, 2)
+        val habit3 = UserHabit("3","3", "Test 3", 30, 0)
 
         HabitRepository.addHabit(habit1)
         HabitRepository.addHabit(habit2)
@@ -48,7 +48,7 @@ class HabitTests {
 
     @Test
     fun testCheckWorstHabitWithOne() {
-        val habit = UserHabit("1","Test", 67, "cesar")
+        val habit = UserHabit("1","1", "Test", 67, 1)
 
         HabitRepository.addHabit(habit)
         assert(HabitRepository.habitsReport.worstHabit!! == habit)
@@ -56,9 +56,9 @@ class HabitTests {
 
     @Test
     fun testCheckWorstHabitWithMany() {
-        val habit1 = UserHabit("1","Test", 67, "cesar")
-        val habit2 = UserHabit("2","Test", 20, "miguel")
-        val habit3 = UserHabit("3","Test", 30, "chris")
+        val habit1 = UserHabit("1","1", "Test 1", 67, 1)
+        val habit2 = UserHabit("2","2", "Test 2", 20, 2)
+        val habit3 = UserHabit("3","3", "Test 3", 30, 0)
 
         HabitRepository.addHabit(habit1)
         HabitRepository.addHabit(habit2)
@@ -99,7 +99,7 @@ class HabitTests {
 
     @Test
     fun testHabitsRangeWithOne() {
-        val habit = UserHabit("1","Test", 67, "cesar")
+        val habit = UserHabit("1","1", "Test", 67, 1)
 
         HabitRepository.addHabit(habit)
         assert(HabitRepository.habitsReport.habitsPerRange.blueRange == 1)
@@ -107,11 +107,11 @@ class HabitTests {
 
     @Test
     fun testHabitsRangeWithMany() {
-        val habit1 = UserHabit("1", "Test 1", 67, "cesar")
-        val habit2 = UserHabit("2", "Test 2", 70, "miguel")
-        val habit3 = UserHabit("3", "Test 3", 30, "chris")
-        val habit4 = UserHabit("4", "Test 4", 42, "chris")
-        val habit5 = UserHabit("5", "Test 5", -3, "miguel")
+        val habit1 = UserHabit("1","1","Test 1", 67, 0)
+        val habit2 = UserHabit("2","1","Test 2", 70, 1)
+        val habit3 = UserHabit("3","1","Test 3", 30, 1)
+        val habit4 = UserHabit("4","2","Test 4", 42, 2)
+        val habit5 = UserHabit("5","3","Test 5", -3, 2)
 
         HabitRepository.addHabit(habit1)
         HabitRepository.addHabit(habit2)
